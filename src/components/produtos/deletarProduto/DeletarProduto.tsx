@@ -65,40 +65,40 @@ function DeletarProduto() {
 
     return (
         <>
-            <div className='pt-40'>
+            <div className="pt-40 px-4">
+                <div className="lg:w-1/3 mx-auto bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
+                    <h4 className="text-3xl font-bold text-center text-gray-800 mb-6">Deletar Produto?</h4>
 
-                <div className=' lg:w-1/3 mx-auto lg:bg-white lg:border border-gray-200 rounded-lg lg:shadow-lg '>
-                    <h4 className='text-2xl text-center my-4'>Deletar Produto?</h4>
+                    <div className="bg-gray-50 flex flex-col gap-4 rounded-xl overflow-auto p-6">
+                        <div>
+                            <h4 className="text-xl font-semibold uppercase text-gray-700">{produto.nome}</h4>
+                            <p className="text-gray-600 mt-2">{produto.descricao}</p>
+                        </div>
 
-                    <div className=' bg-gray-100 flex flex-col rounded-xl overflow-auto justify-between m-10'>
+                        <div className="flex gap-4 mt-4">
+                            <Button
+                                className="w-full bg-gray-300 text-gray-800 hover:bg-gray-400 transition-all duration-300 p-2 rounded-md font-medium"
+                                onClick={retornar}
+                            >
+                                Não
+                            </Button>
 
-                        <div className=' flex '>
-                            <div>
-                                <h4 className='lg:text-xl xs:text-lg font-semibold uppercase p-2 text-gray-800'>{produto.nome}</h4>
-                                <p className='lg:text-lg xs:text-sm p-2'>{produto.descricao}</p>
-                                <div className='flex'>
-                                    <Button className='text-gray-100 bg-gray-400 hover:bg-gray-700 w-full p-2'
-                                            onClick={retornar}
-                                    >
-                                        Não
-                                    </Button>
-
-                                    <Button
-                                        className='w-full text-gray-100 bg-gray-500 hover:bg-gray-700 flex items-center justify-center '
-                                        onClick={deletarProduto}>
-                                        {isLoading ?
-                                            <RotatingLines
-                                                strokeColor='white'
-                                                strokeWidth='5'
-                                                animationDuration='0.75'
-                                                width='24'
-                                                visible={true}
-                                            /> :
-                                            <span>Sim</span>
-                                        }
-                                    </Button>
-                                </div>
-                            </div>
+                            <Button
+                                className="w-full bg-red-500 text-white hover:bg-red-600 transition-all duration-300 p-2 rounded-md font-medium flex items-center justify-center"
+                                onClick={deletarProduto}
+                            >
+                                {isLoading ? (
+                                    <RotatingLines
+                                        strokeColor="white"
+                                        strokeWidth="5"
+                                        animationDuration="0.75"
+                                        width="24"
+                                        visible={true}
+                                    />
+                                ) : (
+                                    <span>Sim</span>
+                                )}
+                            </Button>
                         </div>
                     </div>
                 </div>

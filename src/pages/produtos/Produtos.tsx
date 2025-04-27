@@ -9,9 +9,9 @@ import Categoria from '../../models/Categoria'
 import Produto from '../../models/Produto'
 import ListarProduto from '../../components/produtos/listarProduto/ListarProduto.tsx'
 import {
-    Button,
+    Button, Drawer, DrawerHeader, DrawerItems,
     ListGroup,
-    ListGroupItem,
+    ListGroupItem, Spinner,
     Table,
     TableBody,
     TableCell,
@@ -23,6 +23,11 @@ import {Link, useNavigate} from 'react-router-dom'
 import Fornecedor from '../../models/Fornecedor.ts';
 import ListarCategorias from '../../components/categorias/listarCategorias/ListarCategorias.tsx';
 import ListarFornecedores from '../../components/fornecedores/listarFornecedores/ListarFornecedores.tsx';
+import {HiChevronDoubleRight} from "react-icons/hi2";
+import {FaEdit, FaTrashAlt} from "react-icons/fa";
+import {node} from "globals";
+
+"use client";
 
 function Produtos() {
 
@@ -35,25 +40,26 @@ function Produtos() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
 
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
-    const [fornecedorSelecionado, setFornecedorSelecionado] = useState<string | null>(null);
+    const [categoriasSelecionadas, setCategoriasSelecionadas] = useState<string[]>([]);
+    const [fornecedoresSelecionados, setFornecedoresSelecionados] = useState<string[]>([]);
 
     const categoriasOrdenadas = [...categorias].sort((a, b) => a.nome.localeCompare(b.nome));
     const fornecedoresOrdenados = [...fornecedores].sort((a, b) => a.nome.localeCompare(b.nome));
 
     let produtosParaExibir = [...produtos];
 
-    if (categoriaSelecionada) {
+    if (categoriasSelecionadas.length > 0) {
         produtosParaExibir = produtosParaExibir.filter(
-            (produto) => produto.categoria?.nome === categoriaSelecionada
+            (produto) => produto.categoria && categoriasSelecionadas.includes(produto.categoria.nome)
         );
     }
 
-    if (fornecedorSelecionado) {
+    if (fornecedoresSelecionados.length > 0) {
         produtosParaExibir = produtosParaExibir.filter(
-            (produto) => produto.fornecedor?.nome === fornecedorSelecionado
+            (produto) => produto.fornecedor && fornecedoresSelecionados.includes(produto.fornecedor.nome)
         );
     }
+
 
     produtosParaExibir = produtosParaExibir
         .sort((a, b) => a.nome.localeCompare(b.nome))
@@ -93,13 +99,20 @@ function Produtos() {
     }
 
     function handleCategoriaClick(categoriaNome: string) {
-        setCategoriaSelecionada(prev => prev === categoriaNome ? null : categoriaNome);
+        setCategoriasSelecionadas(prev =>
+            prev.includes(categoriaNome)
+                ? prev.filter(nome => nome !== categoriaNome)
+                : [...prev, categoriaNome]
+        );
     }
 
     function handleFornecedorClick(fornecedorNome: string) {
-        setFornecedorSelecionado(prev => prev === fornecedorNome ? null : fornecedorNome);
+        setFornecedoresSelecionados(prev =>
+            prev.includes(fornecedorNome)
+                ? prev.filter(nome => nome !== fornecedorNome) // Remove se já estiver selecionado
+                : [...prev, fornecedorNome] // Adiciona se ainda não estiver selecionado
+        );
     }
-
 
     useEffect(() => {
         if (token === '') {
@@ -114,64 +127,108 @@ function Produtos() {
         buscarProdutos();
     }, []);
 
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleClose = () => setIsOpen(false);
+
+    const renderizarFiltros = () => (
+        <div className='xs:min-w-[10vw]'>
+            <div className='flex flex-col justify-center'>
+                {/* Seus ListGroup, Botões de Cadastro, Categorias, Fornecedores */}
+            </div>
+        </div>
+    );
+
+    function renderizarMenuCompleto() {
+        return (
+            <div className="flex flex-col w-full overflow-y-auto">
+                {/* Botões de Cadastro */}
+                <ListGroup className="sm:w-48 mt-0 mx-4 mb-4 xs:w-32 overflow-y-auto">
+                    <div className="flex flex-col gap-3 m-5">
+                        <Button className="w-full">
+                            <Link to="/cadastroCategoria" className="w-full block text-center">
+                                Cadastrar Categoria
+                            </Link>
+                        </Button>
+                        <Button className="w-full">
+                            <Link to="/cadastroFornecedor" className="w-full block text-center">
+                                Cadastrar Fornecedor
+                            </Link>
+                        </Button>
+                        <Button className="w-full">
+                            <Link to="/cadastroProduto" className="w-full block text-center">
+                                Cadastrar Produto
+                            </Link>
+                        </Button>
+                    </div>
+                </ListGroup>
+
+
+                <ListGroup className='sm:w-48 mt-0 mx-4 mb-4 xs:w-32 max-h-[60vh] overflow-y-auto'>
+                    <h4 className='text-2xl text-center py-2 rounded-t-lg bg-blue-700 text-blue-50'>Categorias</h4>
+                    {categoriasOrdenadas.map((categoria) => (
+                        <ListGroupItem
+                            key={categoria.id}
+                            onClick={() => handleCategoriaClick(categoria.nome)}
+                            className={`${categoriasSelecionadas.includes(categoria.nome) ? 'font-bold' : ''}`}
+                            active={categoriasSelecionadas.includes(categoria.nome)}
+                        >
+                            <ListarCategorias categoria={categoria}/>
+                            {/*{categoria.nome}*/}
+                        </ListGroupItem>
+                    ))}
+                </ListGroup>
+
+                <ListGroup className='sm:w-48 mt-0 mx-4 mb-4 xs:w-32 max-h-[60vh] overflow-y-auto'>
+                    <h4 className='text-2xl text-center py-2 rounded-t-lg bg-blue-700 text-blue-50'>Fornecedores</h4>
+                    {fornecedoresOrdenados.map((fornecedor) => (
+                        <ListGroupItem
+                            key={fornecedor.id}
+                            onClick={() => handleFornecedorClick(fornecedor.nome)}
+                            className={`${fornecedoresSelecionados.includes(fornecedor.nome) ? 'font-bold' : ''}`}
+                            active={fornecedoresSelecionados.includes(fornecedor.nome)}
+                        >
+                            <ListarFornecedores fornecedor={fornecedor} />
+                        </ListGroupItem>
+
+                    ))}
+                </ListGroup>
+
+
+                {/* Filtros adicionais */}
+                <div className="m-4">
+                    {renderizarFiltros()}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
+            {!isOpen && (
+                <div
+                    className="flex fixed mt-24 items-center z-50 bg-gray-300 rounded-r-lg p-4 justify-center sm:hidden">
+                    <HiChevronDoubleRight onClick={() => setIsOpen(true)}/>
+                </div>
+            )}
+
+            <Drawer open={isOpen} onClose={handleClose}>
+                <DrawerHeader title="" titleIcon={() => <></>}/>
+                <DrawerItems>
+                    {renderizarMenuCompleto()}
+                </DrawerItems>
+            </Drawer>
+
             <div className='pt-32 pb-20 flex-col min-h-[95vh]  '>
                 <div className='flex'>
-                    <div className='xs:min-w-[10vw] '>
-                        <div className='flex flex-col justify-center'>
-                            <ListGroup className='sm:w-48 m-4 xs:w-32'>
-                                <div>
-                                    <div className='flex flex-wrap gap-3 m-5'>
-                                        <Button>
-                                            <Link to={'/cadastroCategoria'}>Cadastrar Categoria</Link>
-                                        </Button>
-                                        <Button>
-                                            <Link to={'/cadastroFornecedor'}>Cadastrar Fornecedor</Link>
-                                        </Button>
-                                        <Button>
-                                            <Link to={'/cadastroProduto'}>Cadastrar Produto</Link>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </ListGroup>
-
-                            <ListGroup className='sm:w-48 m-4 xs:w-32'>
-                                <h4 className='text-2xl text-center py-2 rounded-t-lg bg-blue-700 text-blue-50'>Categorias</h4>
-                                {categoriasOrdenadas.map((categoria) => (
-                                    <ListGroupItem
-                                        key={categoria.id}
-                                        onClick={() => handleCategoriaClick(categoria.nome)}
-                                        className={`${categoria.nome === categoriaSelecionada ? 'font-bold' : ''}`}
-                                        active={categoria.nome === categoriaSelecionada}
-                                    >
-                                        <ListarCategorias categoria={categoria} key={categoria.id}/>
-
-                                        {categoria.nome}
-                                    </ListGroupItem>
-                                ))}
-                            </ListGroup>
-
-                            <ListGroup className='sm:w-48 m-4 xs:w-32'>
-                                <h4 className='text-2xl text-center py-2 rounded-t-lg bg-blue-700 text-blue-50'>Fornecedores</h4>
-
-                                {fornecedoresOrdenados.map((fornecedor) => (
-                                    <ListGroupItem
-                                        key={fornecedor.id}
-                                        onClick={() => handleFornecedorClick(fornecedor.nome)}
-                                        className={`${fornecedor.nome === fornecedorSelecionado ? 'font-bold' : ''}`}
-                                        active={fornecedor.nome === fornecedorSelecionado}
-                                    >
-                                        <ListarFornecedores fornecedor={fornecedor} key={fornecedor.id}/>
-
-                                        {fornecedor.nome}
-                                    </ListGroupItem>
-                                ))}
-                            </ListGroup>
+                    <div className="hidden sm:block w-64">
+                        <div className=" top-32 left-4 p-4 overflow-y-auto">
+                            {renderizarMenuCompleto()}
                         </div>
                     </div>
 
-                    <div className='mx-6  overflow-x-auto'>
+                    <div
+                        className="flex-1 mx-6 overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400">
                         {produtos.length === 0 && (
                             <DNA
                                 visible={true}
@@ -181,9 +238,11 @@ function Produtos() {
                                 wrapperStyle={{}}
                                 wrapperClass='dna-wrapper mx-auto'
                             />
+                            // <Spinner aria-label="Default status example"/>
                         )}
 
-                        <div className='mx-auto py-4 overflow-x-auto'>
+                        <div
+                            className='mx-auto py-4 overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400'>
                             <Table hoverable>
                                 <TableHead>
                                     <TableRow>
