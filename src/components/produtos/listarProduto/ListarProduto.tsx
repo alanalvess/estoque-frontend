@@ -8,7 +8,7 @@ interface ListarProdutoProps {
 
 function ListarProduto({produto}: ListarProdutoProps) {
 
-    const valorUnitario = produto.quantidade / produto.valor;
+    const valorUnitario = produto.valor / produto.quantidade;
 
     return (
         <TableRow className='bg-white dark:border-gray-700 dark:bg-gray-800'>
