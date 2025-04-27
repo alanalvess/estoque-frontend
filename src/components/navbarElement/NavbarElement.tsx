@@ -5,7 +5,7 @@ import {SignOut} from '@phosphor-icons/react'
 import {AuthContext} from '../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../utils/ToastAlerta'
 
-import Logo from '../../assets/images/logo.png'
+import Logo from '../../assets/images/gestok.png'
 
 import {Button, DarkThemeToggle, Navbar, NavbarBrand} from 'flowbite-react'
 
@@ -30,8 +30,8 @@ function NavbarElement() {
                     <NavbarBrand>
                         <Link to='/login' className='text-2xl font-bold uppercase'>
                             <div className='flex items-center justify-center gap-3'>
-                                <img src={Logo} alt='produto' className='max-w-10 ml-2 my-3'/>
-                                <h1 className='text-gray-100'>Estoque</h1>
+                                <img src={Logo} alt='Gestok' className='max-w-30 ml-2 my-3'/>
+
                             </div>
                         </Link>
                     </NavbarBrand>
@@ -58,8 +58,8 @@ function NavbarElement() {
                     <NavbarBrand>
                         <Link to='/login' className='text-2xl font-bold uppercase'>
                             <div className='flex items-center justify-center gap-3'>
-                                <img src={Logo} alt='produto' className='max-w-10 ml-2 my-3'/>
-                                <h1 className='text-gray-100'>Estoque</h1>
+                                <img src={Logo} alt='Gestok' className='max-w-30 '/>
+
                             </div>
                         </Link>
                     </NavbarBrand>

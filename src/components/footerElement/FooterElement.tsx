@@ -7,7 +7,7 @@ import {
     FooterLinkGroup
 } from 'flowbite-react';
 
-import Logo from '../../assets/images/logo.png';
+import Logo from '../../assets/images/gestok.png';
 
 function FooterElement() {
 
@@ -16,12 +16,6 @@ function FooterElement() {
             <Footer container className='rounded-none bg-gray-300 w-full overflow-x-auto'>
                 <div className='w-full text-center overflow-x-auto'>
                     <div className='w-full justify-between sm:flex sm:items-center sm:justify-between'>
-                        <FooterBrand
-                            href={Logo}
-                            src={Logo}
-                            alt='Controle de Estoque'
-                            // name='Controle de Estoque'
-                        />
                         <FooterLinkGroup>
                             <FooterLink href='/duvidas'>Dúvidas</FooterLink>
                             <FooterLink href='sobre'>Sobre</FooterLink>
@@ -33,7 +27,7 @@ function FooterElement() {
 
                     <FooterCopyright
                         href='produtos/all'
-                        by='Controle de Estoque™'
+                        by='Gestok™'
                         year={2025}
                     />
                 </div>
