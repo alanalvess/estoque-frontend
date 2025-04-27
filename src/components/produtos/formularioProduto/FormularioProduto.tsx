@@ -14,94 +14,126 @@ import InputField from '../../form/InputField.tsx';
 import TextAreaField from '../../form/TextInputField.tsx';
 import SelectField from '../../form/SelectField.tsx';
 import {UnidadeDeMedida} from '../../../utils/UnidadeDeMedida.ts';
+import {HiChevronLeft} from "react-icons/hi2";
 
 'use client';
 
+const categoriaInicial: Categoria = {
+    id: 0,
+    nome: ''
+};
+
+const fornecedorInicial: Fornecedor = {
+    id: 0,
+    nome: '',
+    cnpj: '',
+    email: '',
+    telefone: '',
+    endereco: ''
+};
+
+const produtoInicial: Produto = {
+    id: 0,
+    nome: '',
+    descricao: '',
+    valor: 0,
+    quantidade: 0,
+    disponivel: true,
+    unidadeMedida: null,
+    codigo: '',
+    marca: '',
+    estoqueMinimo: 0,
+    estoqueMaximo: 0,
+    validade: '',
+    dataEntrada: '',
+    dataSaida: '',
+    categoria: null,
+    fornecedor: null
+};
 
 function FormularioProduto() {
 
     const navigate = useNavigate();
-
-    const {id} = useParams<{ id: string }>();
-
-    const {usuario, handleLogout} = useContext(AuthContext);
+    const { id } = useParams<{ id: string }>();
+    const { usuario, handleLogout } = useContext(AuthContext);
     const token = usuario.token;
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
+    const [estado, setEstado] = useState({
+        isLoading: false,
+        categorias: [] as Categoria[],
+        fornecedores: [] as Fornecedor[],
+        categoria: categoriaInicial,
+        fornecedor: fornecedorInicial,
+        produto: produtoInicial
+    });
 
-    const categoriaInicial: Categoria = {id: 0, nome: ''};
-    const fornecedorInicial: Fornecedor = {
-        id: 0, nome: '', cnpj: '', email: '', telefone: '', endereco: ''
-    };
-    const produtoInicial: Produto = {
-        id: 0,
-        nome: '', descricao: '', valor: 0, quantidade: 0, disponivel: true,
-        unidadeMedida: null, codigo: '', marca: '', estoqueMinimo: 0, estoqueMaximo: 0,
-        validade: '', dataEntrada: '', dataSaida: '',
-        categoria: null, fornecedor: null
-    };
+    const authHeaders = { headers: { Authorization: token } };
 
-    const [categoria, setCategoria] = useState<Categoria>(categoriaInicial);
-    const [fornecedor, setFornecedor] = useState<Fornecedor>(fornecedorInicial);
-    const [produto, setProduto] = useState<Produto>(produtoInicial);
+    useEffect(() => {
+        if (!token) {
+            ToastAlerta('Você precisa estar logado', Toast.Warning);
+            navigate('/login');
+        } else {
+            carregarDados();
+        }
+    }, [token, id]);
 
-    const authHeaders = {headers: {Authorization: token}};
-
-    async function buscarProdutoPorId(id: string) {
-        await buscar(`/produtos/${id}`, setProduto, authHeaders);
-    }
-
-    async function buscarCategoriaPorId(id: string) {
-        await buscar(`/categorias/${id}`, setCategoria, authHeaders);
-    }
-
-    async function buscarFornecedorPorId(id: string) {
-        await buscar(`/fornecedores/${id}`, setFornecedor, authHeaders);
-    }
-
-    async function buscarCategorias() {
-        await buscar('/categorias/all', setCategorias, authHeaders);
-    }
-
-    async function buscarFornecedores() {
-        await buscar('/fornecedores/all', setFornecedores, authHeaders);
-    }
-
-
-    async function gerarNovoProduto(e: ChangeEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setIsLoading(true);
-
-        try {
-            if (id !== undefined) {
-                await atualizarProduto();
-            } else {
-                await cadastrarProduto();
+    useEffect(() => {
+        setEstado(prev => ({
+            ...prev,
+            produto: {
+                ...prev.produto,
+                categoria: prev.categoria,
+                fornecedor: prev.fornecedor
             }
-        } catch (error: any) {
-            handleProdutoError(error);
-        } finally {
-            setIsLoading(false);
+        }));
+    }, [estado.categoria, estado.fornecedor]);
+
+    async function carregarDados() {
+        try {
+            await Promise.all([
+                buscar('/categorias/all', (data) => setEstado(
+                    prev => (
+                        { ...prev, categorias: data })),
+                    authHeaders
+                ),
+
+                buscar('/fornecedores/all', (data) => setEstado(
+                    prev => (
+                        { ...prev, fornecedores: data })),
+                    authHeaders
+                ),
+
+                id ? buscar(`/produtos/${id}`, (data) => setEstado(
+                    prev => (
+                        { ...prev, produto: data })),
+                    authHeaders
+                ) : null
+            ]);
+        } catch (error) {
+            ToastAlerta('Erro ao buscar dados iniciais', Toast.Error);
         }
     }
 
-
-    async function atualizarProduto() {
-        await atualizar(`/produtos/${id}`, produto, setProduto, authHeaders);
-        ToastAlerta('Produto atualizado', Toast.Success);
-        retornar();
-    }
-
-    async function cadastrarProduto() {
-        await cadastrar(`/produtos/cadastrar`, produto, setProduto, authHeaders);
-        ToastAlerta('Produto cadastrado', Toast.Success);
-        retornar();
+    function atualizarCampo(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+        const { name, value } = e.target;
+        setEstado(prev => ({
+            ...prev,
+            produto: {
+                ...prev.produto,
+                [name]: value
+            }
+        }));
     }
 
     function handleCheckboxChange(checked: boolean) {
-        setProduto((prevProduto) => ({...prevProduto, disponivel: checked}));
+        setEstado(prev => ({
+            ...prev,
+            produto: {
+                ...prev.produto,
+                disponivel: checked
+            }
+        }));
     }
 
     function handleProdutoError(error: any) {
@@ -113,197 +145,195 @@ function FormularioProduto() {
         }
     }
 
-    function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-        setProduto(prev => ({...prev, [e.target.name]: e.target.value}));
+    async function salvarProduto() {
+        const endpoint = id ? `/produtos/${id}` : '/produtos/cadastrar';
+        const metodo = id ? atualizar : cadastrar;
+        const mensagem = id ? 'Produto atualizado' : 'Produto cadastrado';
+
+        await metodo(endpoint, estado.produto, (data) => setEstado(
+            prev => (
+                { ...prev, produto: data })),
+            authHeaders
+        );
+        ToastAlerta(mensagem, Toast.Success);
+        retornar();
     }
 
-    function atualizarEstadoTexto(e: ChangeEvent<HTMLTextAreaElement>) {
-        setProduto(prev => ({...prev, [e.target.name]: e.target.value}));
-    }
+    async function gerarNovoProduto(e: ChangeEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setEstado(prev => ({ ...prev, isLoading: true }));
 
-    function atualizarEstadoSelect(e: ChangeEvent<HTMLSelectElement>) {
-        setProduto(prev => ({...prev, [e.target.name]: e.target.value}));
+        try {
+            await salvarProduto();
+        } catch (error: any) {
+            handleProdutoError(error);
+        } finally {
+            setEstado(prev => ({ ...prev, isLoading: false }));
+        }
     }
 
     function retornar() {
         navigate('/produtos/all');
     }
 
-    useEffect(() => {
-        if (token === '') {
-            ToastAlerta('Você precisa estar logado', Toast.Warning);
-            navigate('/login');
-        }
-    }, [token]);
-
-    useEffect(() => {
-        buscarCategorias();
-        if (id !== undefined) {
-            buscarProdutoPorId(id);
-        }
-    }, [id]);
-
-    useEffect(() => {
-        buscarFornecedores();
-        if (id !== undefined) {
-            buscarProdutoPorId(id);
-        }
-    }, [id]);
-
-    useEffect(() => {
-        setProduto(prev => ({
-            ...prev,
-            categoria,
-            fornecedor
-        }));
-    }, [categoria, fornecedor]);
-
     return (
         <>
-            <div className=' py-40'>
-                <div className='flex justify-center lg:mx-[20vw] font-bold border-gray-200 rounded-lg lg:shadow-lg'>
-                    <form className='flex flex-col gap-4'
-                          onSubmit={gerarNovoProduto}>
-                        <h2 className='text-4xl text-center my-8 text-gray-900'>
-                            {id !== undefined ? 'Editar Produto' : 'Cadastrar Produto'}
-                        </h2>
+            <div className="py-30 px-4  min-h-screen">
+                <div className="max-w-4xl mx-auto  rounded-2xl shadow-xl p-10">
+                    <Button
+                        onClick={retornar} // volta uma página no histórico
+                        className='bg-gray-300 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700 font-bold px-6 py-3 transition-all duration-300 cursor-pointer'
 
+                    >
+                        <HiChevronLeft className="mr-2 h-5 w-5"/>
+                        Voltar
+                    </Button>
+
+                    <h2 className="text-4xl font-bold text-center text-gray-800 mb-10">
+                        {id !== undefined ? 'Editar Produto' : 'Cadastrar Produto'}
+                    </h2>
+
+                    <form
+                        onSubmit={gerarNovoProduto}
+                        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                    >
                         <InputField
-                            label='Código do Produto'
-                            placeholder='Código do produto'
-                            name='codigo'
-                            value={produto.codigo}
-                            onChange={atualizarEstado}
+                            label="Código do Produto"
+                            name="codigo"
+                            value={estado.produto.codigo}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Nome do Produto'
-                            name='nome'
-                            value={produto.nome}
-                            onChange={atualizarEstado}
+                            label="Nome do Produto"
+                            name="nome"
+                            value={estado.produto.nome}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Quantidade do Produto'
-                            name='quantidade'
-                            value={produto.quantidade}
-                            onChange={atualizarEstado}
+                            label="Quantidade do Produto"
+                            name="quantidade"
+                            value={estado.produto.quantidade}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <SelectField
-                            label='Unidade de Medida'
-                            name='unidadeMedida'
-                            value={produto.unidadeMedida || ''}
+                            label="Unidade de Medida"
+                            name="unidadeMedida"
+                            value={estado.produto.unidadeMedida || ''}
                             options={UnidadeDeMedida}
-                            onChange={atualizarEstadoSelect}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Valor do Produto'
-                            name='valor'
-                            value={produto.valor}
-                            onChange={atualizarEstado}
+                            label="Valor do Produto"
+                            name="valor"
+                            value={estado.produto.valor}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Data de Entrada'
-                            name='dataEntrada'
-                            value={produto.dataEntrada}
-                            onChange={atualizarEstado}
+                            label="Data de Entrada"
+                            name="dataEntrada"
+                            value={estado.produto.dataEntrada}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Validade do Produto'
-                            name='validade'
-                            value={produto.validade}
-                            onChange={atualizarEstado}
+                            label="Validade do Produto"
+                            name="validade"
+                            value={estado.produto.validade}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Marca do Produto'
-                            name='marca'
-                            value={produto.marca}
-                            onChange={atualizarEstado}
+                            label="Marca do Produto"
+                            name="marca"
+                            value={estado.produto.marca}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Estoque Mínimo'
-                            name='estoqueMinimo'
-                            value={produto.estoqueMinimo}
-                            onChange={atualizarEstado}
+                            label="Estoque Mínimo"
+                            name="estoqueMinimo"
+                            value={estado.produto.estoqueMinimo}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <InputField
-                            label='Estoque Máximo'
-                            name='estoqueMaximo'
-                            value={produto.estoqueMaximo}
-                            onChange={atualizarEstado}
-                            required
-                        />
-
-                        {/*<InputField*/}
-                        {/*    label='Data de Saida'*/}
-                        {/*    name='dataSaida'*/}
-                        {/*    value={produto.dataSaida}*/}
-                        {/*    onChange={atualizarEstado}*/}
-                        {/*    required*/}
-                        {/*/>*/}
-
-                        <TextAreaField
-                            label='Observações do Produto'
-                            name='descricao'
-                            value={produto.descricao}
-                            onChange={atualizarEstadoTexto}
+                            label="Estoque Máximo"
+                            name="estoqueMaximo"
+                            value={estado.produto.estoqueMaximo}
+                            onChange={atualizarCampo}
                             required
                         />
 
                         <SelectField
-                            label='Categoria do Produto'
-                            name='categoria'
-                            value={produto.categoria?.id || ''}
-                            options={categorias.map((cat) => ({value: cat.id, label: cat.nome}))}
-                            onChange={(e) => buscarCategoriaPorId(e.currentTarget.value)}
+                            label="Categoria do Produto"
+                            name="categoria"
+                            value={estado.produto.categoria?.id || ''}
+                            options={estado.categorias.map((cat) => ({ value: cat.id, label: cat.nome }))}
+                            onChange={(e) => buscar(`/categorias/${e.currentTarget.value}`, (data) => setEstado(prev => ({ ...prev, categoria: data })), authHeaders)}
                             required
                         />
 
                         <SelectField
-                            label='Fornecedor do Produto'
-                            name='fornecedor'
-                            value={produto.fornecedor?.id || ''}
-                            options={fornecedores.map((cat) => ({value: cat.id, label: cat.nome}))}
-                            onChange={(e) => buscarFornecedorPorId(e.currentTarget.value)}
+                            label="Fornecedor do Produto"
+                            name="fornecedor"
+                            value={estado.produto.fornecedor?.id || ''}
+                            options={estado.fornecedores.map((forn) => ({ value: forn.id, label: forn.nome }))}
+                            onChange={(e) => buscar(`/fornecedores/${e.currentTarget.value}`, (data) => setEstado(prev => ({ ...prev, fornecedor: data })), authHeaders)}
                             required
                         />
 
-                        <div className='flex max-w-md flex-col gap-4'>
-                            <ToggleSwitch checked={produto.disponivel} label='Produto Disponível?'
-                                          onChange={handleCheckboxChange}/>
+                        <div className="md:col-span-2">
+                            <TextAreaField
+                                label="Observações do Produto"
+                                name="descricao"
+                                value={estado.produto.descricao}
+                                onChange={atualizarCampo}
+                            />
                         </div>
 
-                        <Button
-                            disabled={id !== undefined && produto.nome === ''}
-                            className='rounded disabled:bg-slate-200 bg-gray-500 hover:bg-gray-700 text-white font-bold w-1/2 mx-auto py-2 flex justify-center'
-                            type='submit'
-                        >
-                            {isLoading ?
-                                <RotatingLines
-                                    strokeColor='white'
-                                    strokeWidth='5'
-                                    animationDuration='0.75'
-                                    width='24'
-                                    visible={true}
-                                /> : id !== undefined ? <span>Editar</span> : <span>Cadastrar</span>
-                            }
-                        </Button>
+                        <div className="md:col-span-2 flex justify-start">
+                            <ToggleSwitch
+                                checked={estado.produto.disponivel}
+                                label="Produto Disponível?"
+                                onChange={handleCheckboxChange}
+                            />
+                        </div>
+
+                        <div className="md:col-span-2 flex justify-center mt-6">
+                            <Button
+                                disabled={id !== undefined && estado.produto.nome === ''}
+                                className="rounded bg-gray-500 hover:bg-gray-700 text-white font-bold px-6 py-3 flex justify-center items-center transition-all duration-300"
+                                type="submit"
+                            >
+                                {estado.isLoading ? (
+                                    <RotatingLines
+                                        strokeColor="white"
+                                        strokeWidth="5"
+                                        animationDuration="0.75"
+                                        width="24"
+                                        visible={true}
+                                    />
+                                ) : id !== undefined ? (
+                                    <span>Editar</span>
+                                ) : (
+                                    <span>Cadastrar</span>
+                                )}
+                            </Button>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -5,7 +5,7 @@ import {RotatingLines} from 'react-loader-spinner'
 import {AuthContext} from '../../contexts/AuthContext'
 
 import UsuarioLogin from '../../models/UsuarioLogin'
-import {Button} from 'flowbite-react';
+import {Button, Spinner} from 'flowbite-react';
 import InputField from '../../components/form/InputField.tsx';
 
 function Login() {
@@ -65,13 +65,15 @@ function Login() {
                                 className='rounded bg-gray-400 hover:bg-gray-900 text-white w-1/2 py-2 flex justify-center'
                         >
                             {isLoading ?
-                                <RotatingLines
-                                    strokeColor='white'
-                                    strokeWidth='5'
-                                    animationDuration='0.75'
-                                    width='24'
-                                    visible={true}
-                                /> : <span>Entrar</span>
+                                // <RotatingLines
+                                //     strokeColor='white'
+                                //     strokeWidth='5'
+                                //     animationDuration='0.75'
+                                //     width='24'
+                                //     visible={true}
+                                // />
+                                <Spinner aria-label="Default status example" size='md'/>
+                                : <span>Entrar</span>
                             }
                         </Button>
 
