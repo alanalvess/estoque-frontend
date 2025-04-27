@@ -19,6 +19,7 @@ export enum UnidadeMedida {
     PAR = 'PAR',
     KIT = 'KIT',
     FARDO = 'FARDO',
+    OUTROS = 'OUTROS'
 }
 
 

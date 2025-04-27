@@ -16,4 +16,5 @@ export const UnidadeDeMedida = [
     {value: 'PAR', label: 'par'},
     {value: 'KIT', label: 'kit'},
     {value: 'FARDO', label: 'fardo'},
+    {value: 'OUTROS', label: 'outros'},
 ];
