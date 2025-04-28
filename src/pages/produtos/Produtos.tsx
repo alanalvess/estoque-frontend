@@ -26,6 +26,8 @@ import ListarFornecedores from '../../components/fornecedores/listarFornecedores
 import {HiChevronDoubleRight} from "react-icons/hi2";
 import {FaEdit, FaTrashAlt} from "react-icons/fa";
 import {node} from "globals";
+import SearchBar from "../../components/produtos/searchBar/SearchBar.tsx";
+import InputField from "../../components/form/InputField.tsx";
 
 "use client";
 
@@ -36,6 +38,8 @@ function Produtos() {
     const {usuario, handleLogout} = useContext(AuthContext);
     const token = usuario.token;
 
+    const [loading, setLoading] = useState(true);
+
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
@@ -45,6 +49,10 @@ function Produtos() {
 
     const categoriasOrdenadas = [...categorias].sort((a, b) => a.nome.localeCompare(b.nome));
     const fornecedoresOrdenados = [...fornecedores].sort((a, b) => a.nome.localeCompare(b.nome));
+
+    const handleSearch = (produtos: Produto[]) => {
+        setProdutos(produtos);
+    }
 
     let produtosParaExibir = [...produtos];
 
@@ -89,14 +97,20 @@ function Produtos() {
 
     async function buscarProdutos() {
         try {
+            setLoading(true);
             await buscar('/produtos/all', setProdutos, {headers: {Authorization: token}});
         } catch (error: any) {
             if (error.toString().includes('403')) {
                 ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
                 handleLogout();
+            } else {
+                ToastAlerta("Não há produtos", Toast.Info);
             }
+        } finally {
+            setLoading(false);
         }
     }
+
 
     function handleCategoriaClick(categoriaNome: string) {
         setCategoriasSelecionadas(prev =>
@@ -123,7 +137,7 @@ function Produtos() {
 
     useEffect(() => {
         buscarCategorias();
-        buscarFornecedores()
+        buscarFornecedores();
         buscarProdutos();
     }, []);
 
@@ -140,6 +154,30 @@ function Produtos() {
     );
 
     function renderizarMenuCompleto() {
+        // Estado para armazenar o termo de busca para categorias e fornecedores
+        const [searchTermCategorias, setSearchTermCategorias] = useState('');
+        const [searchTermFornecedores, setSearchTermFornecedores] = useState('');
+
+        // Função para lidar com a mudança no campo de busca de categorias
+        const handleSearchChangeCategorias = (event) => {
+            setSearchTermCategorias(event.target.value);
+        };
+
+        // Função para lidar com a mudança no campo de busca de fornecedores
+        const handleSearchChangeFornecedores = (event) => {
+            setSearchTermFornecedores(event.target.value);
+        };
+
+        // Filtrando as categorias com base no searchTermCategorias
+        const categoriasFiltradas = categoriasOrdenadas.filter(categoria =>
+            categoria.nome.toLowerCase().includes(searchTermCategorias.toLowerCase())
+        );
+
+        // Filtrando os fornecedores com base no searchTermFornecedores
+        const fornecedoresFiltrados = fornecedoresOrdenados.filter(fornecedor =>
+            fornecedor.nome.toLowerCase().includes(searchTermFornecedores.toLowerCase())
+        );
+
         return (
             <div className="flex flex-col w-full overflow-y-auto">
                 {/* Botões de Cadastro */}
@@ -163,37 +201,61 @@ function Produtos() {
                     </div>
                 </ListGroup>
 
-
+                {/* Filtro de Categorias */}
                 <ListGroup className='sm:w-48 mt-0 mx-4 mb-4 xs:w-32 max-h-[60vh] overflow-y-auto'>
                     <h4 className='text-2xl text-center py-2 rounded-t-lg bg-blue-700 text-blue-50'>Categorias</h4>
-                    {categoriasOrdenadas.map((categoria) => (
-                        <ListGroupItem
-                            key={categoria.id}
-                            onClick={() => handleCategoriaClick(categoria.nome)}
-                            className={`${categoriasSelecionadas.includes(categoria.nome) ? 'font-bold' : ''}`}
-                            active={categoriasSelecionadas.includes(categoria.nome)}
-                        >
-                            <ListarCategorias categoria={categoria}/>
-                            {/*{categoria.nome}*/}
+                    <InputField
+                        name="search"
+                        value={searchTermCategorias}
+                        onChange={handleSearchChangeCategorias}
+                        placeholder="Buscar Categorias"
+                        className='w-full p-2 mb-2'
+                    />
+                    {categoriasFiltradas.length > 0 ? (
+                        categoriasFiltradas.map((categoria) => (
+                            <ListGroupItem
+                                key={categoria.id}
+                                onClick={() => handleCategoriaClick(categoria.nome)}
+                                className={`${categoriasSelecionadas.includes(categoria.nome) ? 'font-bold' : ''}`}
+                                active={categoriasSelecionadas.includes(categoria.nome)}
+                            >
+                                <ListarCategorias categoria={categoria} />
+                            </ListGroupItem>
+                        ))
+                    ) : (
+                        <ListGroupItem className="text-center text-gray-500">
+                            Categoria não localizada.
                         </ListGroupItem>
-                    ))}
+                    )}
                 </ListGroup>
 
+                {/* Filtro de Fornecedores */}
                 <ListGroup className='sm:w-48 mt-0 mx-4 mb-4 xs:w-32 max-h-[60vh] overflow-y-auto'>
                     <h4 className='text-2xl text-center py-2 rounded-t-lg bg-blue-700 text-blue-50'>Fornecedores</h4>
-                    {fornecedoresOrdenados.map((fornecedor) => (
-                        <ListGroupItem
-                            key={fornecedor.id}
-                            onClick={() => handleFornecedorClick(fornecedor.nome)}
-                            className={`${fornecedoresSelecionados.includes(fornecedor.nome) ? 'font-bold' : ''}`}
-                            active={fornecedoresSelecionados.includes(fornecedor.nome)}
-                        >
-                            <ListarFornecedores fornecedor={fornecedor} />
+                    <InputField
+                        name="search"
+                        value={searchTermFornecedores}
+                        onChange={handleSearchChangeFornecedores}
+                        placeholder="Buscar Fornecedores"
+                        className='w-full p-2 mb-2'
+                    />
+                    {fornecedoresFiltrados.length > 0 ? (
+                        fornecedoresFiltrados.map((fornecedor) => (
+                            <ListGroupItem
+                                key={fornecedor.id}
+                                onClick={() => handleFornecedorClick(fornecedor.nome)}
+                                className={`${fornecedoresSelecionados.includes(fornecedor.nome) ? 'font-bold' : ''}`}
+                                active={fornecedoresSelecionados.includes(fornecedor.nome)}
+                            >
+                                <ListarCategorias categoria={fornecedor} />
+                            </ListGroupItem>
+                        ))
+                    ) : (
+                        <ListGroupItem className="text-center text-gray-500">
+                            Fornecedor não localizado.
                         </ListGroupItem>
-
-                    ))}
+                    )}
                 </ListGroup>
-
 
                 {/* Filtros adicionais */}
                 <div className="m-4">
@@ -202,6 +264,7 @@ function Produtos() {
             </div>
         );
     }
+
 
     return (
         <>
@@ -220,6 +283,7 @@ function Produtos() {
             </Drawer>
 
             <div className='pt-32 pb-20 flex-col min-h-[95vh]  '>
+                <SearchBar onSearch={handleSearch} onClear={buscarProdutos}/>
                 <div className='flex'>
                     <div className="hidden sm:block w-64">
                         <div className=" top-32 left-4 p-4 overflow-y-auto">
@@ -227,61 +291,59 @@ function Produtos() {
                         </div>
                     </div>
 
+
                     <div
                         className="flex-1 mx-6 overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400">
-                        {produtos.length === 0 && (
+                        {loading ? (
                             <DNA
                                 visible={true}
-                                height='200'
-                                width='200'
-                                ariaLabel='dna-loading'
+                                height="200"
+                                width="200"
+                                ariaLabel="dna-loading"
                                 wrapperStyle={{}}
-                                wrapperClass='dna-wrapper mx-auto'
+                                wrapperClass="dna-wrapper mx-auto"
                             />
-                            // <Spinner aria-label="Default status example"/>
-                        )}
-
-                        <div
-                            className='mx-auto py-4 overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400'>
-                            <Table hoverable>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableHeadCell>Código do Produto</TableHeadCell>
-                                        <TableHeadCell>Nome</TableHeadCell>
-                                        <TableHeadCell>Quantidade</TableHeadCell>
-                                        <TableHeadCell>Unidade de Medida</TableHeadCell>
-                                        <TableHeadCell>Valor</TableHeadCell>
-                                        <TableHeadCell>Valor Unitário</TableHeadCell>
-                                        <TableHeadCell>Data de Entrada</TableHeadCell>
-                                        <TableHeadCell>Validade</TableHeadCell>
-                                        <TableHeadCell>Status</TableHeadCell>
-                                        {/*<TableHeadCell>Data de Saída</TableHeadCell>*/}
-                                        <TableHeadCell>Marca</TableHeadCell>
-                                        <TableHeadCell>Categoria</TableHeadCell>
-                                        <TableHeadCell>Fornecedor</TableHeadCell>
-                                        <TableHeadCell>Observações</TableHeadCell>
-                                        {/*<TableHeadCell>Estoque Mínimo</TableHeadCell>*/}
-                                        {/*<TableHeadCell>Estoque Máximo</TableHeadCell>*/}
-                                        <TableHeadCell>Ações</TableHeadCell>
-                                    </TableRow>
-                                </TableHead>
-
-                                <TableBody className='divide-y'>
-                                    {produtosParaExibir.length > 0 ? (
-                                        produtosParaExibir.map((produto) => (
-                                            <ListarProduto key={produto.id} produto={produto}/>
-                                        ))
-                                    ) : (
+                        ) : (
+                            <div
+                                className="mx-auto py-4 overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400">
+                                <Table hoverable>
+                                    <TableHead>
                                         <TableRow>
-                                            <TableCell colSpan={8} className='text-center py-4'>
-                                                Não há produtos
-                                            </TableCell>
+                                            <TableHeadCell>Código do Produto</TableHeadCell>
+                                            <TableHeadCell>Nome</TableHeadCell>
+                                            <TableHeadCell>Quantidade</TableHeadCell>
+                                            <TableHeadCell>Unidade de Medida</TableHeadCell>
+                                            <TableHeadCell>Valor</TableHeadCell>
+                                            <TableHeadCell>Valor Unitário</TableHeadCell>
+                                            <TableHeadCell>Data de Entrada</TableHeadCell>
+                                            <TableHeadCell>Validade</TableHeadCell>
+                                            <TableHeadCell>Status</TableHeadCell>
+                                            <TableHeadCell>Marca</TableHeadCell>
+                                            <TableHeadCell>Categoria</TableHeadCell>
+                                            <TableHeadCell>Fornecedor</TableHeadCell>
+                                            <TableHeadCell>Observações</TableHeadCell>
+                                            <TableHeadCell>Ações</TableHeadCell>
                                         </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </div>
+                                    </TableHead>
+
+                                    <TableBody className="divide-y">
+                                        {produtosParaExibir.length > 0 ? (
+                                            produtosParaExibir.map((produto) => (
+                                                <ListarProduto key={produto.id} produto={produto}/>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={14} className="text-center py-4">
+                                                    Não há produtos
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        )}
                     </div>
+
                 </div>
             </div>
         </>
