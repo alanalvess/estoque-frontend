@@ -1,15 +1,23 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import {Button} from "flowbite-react";
 
 export default function Erro500() {
+
+    const navigate = useNavigate();
+
+    function retornar() {
+        navigate('/produtos/all');
+    }
+
     return (
-        <div className='flex flex-col items-center justify-center h-screen text-center p-4'>
+        <div className='flex flex-col gap-4 items-center justify-center h-screen text-center p-4'>
             <h1 className='text-6xl font-bold text-red-600'>500</h1>
             <p className='text-2xl mt-4'>Erro interno do servidor</p>
             <p className='text-gray-600 mt-2'>Algo deu errado. Tente novamente mais tarde.</p>
-            <Link to='/produtos/all'
-                  className='mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition'>
-                Voltar para a Home
-            </Link>
+
+            <Button onClick={retornar} color='alternative' className='cursor-pointer'>
+                <span className='text-xl '>Voltar para página de produtos</span>
+            </Button>
         </div>
     );
 }
