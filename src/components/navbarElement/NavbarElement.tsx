@@ -20,7 +20,7 @@ function NavbarElement() {
     function logout() {
         handleLogout();
         ToastAlerta('Usuário deslogado', Toast.Success);
-        navigate('/login');
+        navigate('/home');
     }
 
     if (usuario.token !== '') {
@@ -28,7 +28,7 @@ function NavbarElement() {
             <>
                 <Navbar fluid className='bg-gray-800 fixed top-0 z-40 w-full justify-between '>
                     <NavbarBrand>
-                        <Link to='/login' className='text-2xl font-bold uppercase'>
+                        <Link to='/home' className='text-2xl font-bold uppercase'>
                             <div className='flex items-center justify-center gap-3'>
                                 <img src={Logo} alt='Gestok' className='max-w-30 ml-2 my-3'/>
 
@@ -56,7 +56,7 @@ function NavbarElement() {
             <>
                 <Navbar fluid className='bg-gray-800 fixed top-0 z-40 w-full '>
                     <NavbarBrand>
-                        <Link to='/login' className='text-2xl font-bold uppercase'>
+                        <Link to='/home' className='text-2xl font-bold uppercase'>
                             <div className='flex items-center justify-center gap-3'>
                                 <img src={Logo} alt='Gestok' className='max-w-30 '/>
 

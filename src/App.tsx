@@ -23,6 +23,7 @@ import Erro404 from './pages/erros/Error404.tsx';
 import FormularioFornecedor from './components/fornecedores/formularioFornecedor/FormularioFornecedor.tsx';
 import DeletarFornecedor from './components/fornecedores/deletarFornecedor/DeletarFornecedor.tsx';
 import Duvidas from './pages/duvidas/Duvidas.tsx';
+import Home from "./pages/home/Home.tsx";
 
 function App() {
 
@@ -37,11 +38,11 @@ function App() {
 
                         <NavbarElement/>
 
-                        <div className='  dark:bg-gray-500 min-h-[90vh]'>
+                        <div className='dark:bg-gray-500 min-h-[90vh]'>
                             <Routes>
 
                                 <Route path='/' element={<Login/>}/>
-                                <Route path='/home' element={<Login/>}/>
+                                <Route path='/home' element={<Home/>}/>
 
                                 <Route path='/login' element={<Login/>}/>
                                 <Route path='/cadastro' element={<Cadastro/>}/>
@@ -65,6 +66,7 @@ function App() {
 
                                 <Route path='/erro' element={<Erro500/>}/>
                                 <Route path='*' element={<Erro404/>}/>
+
                             </Routes>
                         </div>
 
