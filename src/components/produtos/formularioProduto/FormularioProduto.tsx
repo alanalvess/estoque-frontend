@@ -15,6 +15,7 @@ import TextAreaField from '../../form/TextInputField.tsx';
 import SelectField from '../../form/SelectField.tsx';
 import {UnidadeDeMedida} from '../../../utils/UnidadeDeMedida.ts';
 import {HiChevronLeft} from "react-icons/hi2";
+import DatePickerField from "../../form/DatePickerField.tsx";
 
 'use client';
 
@@ -44,8 +45,8 @@ const produtoInicial: Produto = {
     marca: '',
     estoqueMinimo: 0,
     estoqueMaximo: 0,
-    validade: '',
-    dataEntrada: '',
+    dataValidade: '',
+    dataEntrada: new Date().toISOString().split('T')[0],
     dataSaida: '',
     categoria: null,
     fornecedor: null
@@ -238,21 +239,26 @@ function FormularioProduto() {
                             required
                         />
 
-                        <InputField
+                        <DatePickerField
                             label="Data de Entrada"
                             name="dataEntrada"
                             value={estado.produto.dataEntrada}
+                            // onChange={atualizarCampo}
+                            onChange={() => {}} // impede qualquer alteração
+                            required
+                            disabled
+
+                        />
+
+                        <DatePickerField
+                            label="Validade"
+                            name="dataValidade"
+                            value={estado.produto.dataValidade}
                             onChange={atualizarCampo}
+                            minDate={new Date()}  // Aqui você usa a data no formato local
                             required
                         />
 
-                        <InputField
-                            label="Validade do Produto"
-                            name="validade"
-                            value={estado.produto.validade}
-                            onChange={atualizarCampo}
-                            required
-                        />
 
                         <InputField
                             label="Marca do Produto"

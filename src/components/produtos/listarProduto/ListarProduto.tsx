@@ -10,6 +10,29 @@ function ListarProduto({produto}: ListarProdutoProps) {
 
     const valorUnitario = produto.valor / produto.quantidade;
 
+    function formatarData(data: string | undefined): string {
+        if (!data) return '—';
+
+        const [ano, mes, dia] = data.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function getCorValidade(dataValidade: string | undefined): string {
+        if (!dataValidade) return 'text-gray-500';
+
+        const hoje = new Date();
+        const [ano, mes, dia] = dataValidade.split('-').map(Number);
+        const validade = new Date(ano, mes - 1, dia);
+
+        const diffMs = validade.getTime() - hoje.getTime();
+        const diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDias < 0) return 'text-red-600 font-semibold';        // Vencido
+        if (diffDias <= 10) return 'text-yellow-400 font-semibold';   // Próximo do vencimento
+        return 'text-green-700 font-semibold';                        // Válido
+    }
+
+
     return (
         <TableRow className='bg-white dark:border-gray-700 dark:bg-gray-800'>
             <TableCell className='whitespace-nowrap font-medium text-gray-900 dark:text-white'>
@@ -23,8 +46,8 @@ function ListarProduto({produto}: ListarProdutoProps) {
             <TableCell>{produto.unidadeMedida}</TableCell>
             <TableCell>R$ {produto.valor?.toFixed(2).replace('.', ',')}</TableCell>
             <TableCell>R$ {valorUnitario?.toFixed(2).replace('.', ',')}</TableCell>
-            <TableCell>{produto.dataEntrada}</TableCell>
-            <TableCell>{produto.validade}</TableCell>
+            <TableCell>{formatarData(produto.dataEntrada)}</TableCell>
+            <TableCell className={getCorValidade(produto.dataValidade)}>{formatarData(produto.dataValidade)}</TableCell>
 
             <TableCell className='text-center'>
                 {produto.disponivel ? (

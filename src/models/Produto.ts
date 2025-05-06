@@ -22,7 +22,6 @@ export enum UnidadeMedida {
     OUTROS = 'OUTROS'
 }
 
-
 export default interface Produto {
     id: number;
     nome: string;
@@ -36,7 +35,7 @@ export default interface Produto {
     marca: string;
     estoqueMinimo: number;
     estoqueMaximo: number;
-    validade: string;
+    dataValidade: string;
     dataEntrada: string;
     dataSaida: string;
 

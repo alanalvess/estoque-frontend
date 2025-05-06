@@ -213,14 +213,34 @@ function Produtos() {
                     />
                     {categoriasFiltradas.length > 0 ? (
                         categoriasFiltradas.map((categoria) => (
+                            // <ListGroupItem
+                            //     key={categoria.id}
+                            //     onClick={() => handleCategoriaClick(categoria.nome)}
+                            //     className={`${categoriasSelecionadas.includes(categoria.nome) ? 'font-bold' : ''}`}
+                            //     active={categoriasSelecionadas.includes(categoria.nome)}
+                            // >
+                            //     <ListarCategorias categoria={categoria} />
+                            // </ListGroupItem>
                             <ListGroupItem
                                 key={categoria.id}
                                 onClick={() => handleCategoriaClick(categoria.nome)}
-                                className={`${categoriasSelecionadas.includes(categoria.nome) ? 'font-bold' : ''}`}
                                 active={categoriasSelecionadas.includes(categoria.nome)}
+                                theme={{
+                                    link: {
+                                        active: {
+                                            on: 'bg-red-600 text-white dark:bg-red-700',
+                                            off:
+                                                'hover:bg-red-100 hover:text-red-700 focus:text-red-700 focus:outline-0 focus:ring-0 focus:ring-none dark:hover:bg-red-800 dark:hover:text-white dark:focus:text-white dark:focus:ring-0'
+                                        }
+                                    }
+                                }}
                             >
                                 <ListarCategorias categoria={categoria} />
                             </ListGroupItem>
+
+
+
+
                         ))
                     ) : (
                         <ListGroupItem className="text-center text-gray-500">
@@ -244,10 +264,10 @@ function Produtos() {
                             <ListGroupItem
                                 key={fornecedor.id}
                                 onClick={() => handleFornecedorClick(fornecedor.nome)}
-                                className={`${fornecedoresSelecionados.includes(fornecedor.nome) ? 'font-bold' : ''}`}
+                                className={`${fornecedoresSelecionados.includes(fornecedor.nome) ? 'font-bold rounded-none' : ''}`}
                                 active={fornecedoresSelecionados.includes(fornecedor.nome)}
                             >
-                                <ListarCategorias categoria={fornecedor} />
+                                <ListarFornecedores fornecedor={fornecedor}/>
                             </ListGroupItem>
                         ))
                     ) : (
@@ -333,7 +353,7 @@ function Produtos() {
                                             ))
                                         ) : (
                                             <TableRow>
-                                                <TableCell colSpan={14} className="text-center py-4">
+                                                <TableCell colSpan={14} className="text-center py-4 text-gray-800">
                                                     Não há produtos
                                                 </TableCell>
                                             </TableRow>
@@ -343,7 +363,6 @@ function Produtos() {
                             </div>
                         )}
                     </div>
-
                 </div>
             </div>
         </>
