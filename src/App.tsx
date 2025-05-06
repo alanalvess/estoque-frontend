@@ -41,7 +41,7 @@ function App() {
                         <div className='dark:bg-gray-500 min-h-[90vh]'>
                             <Routes>
 
-                                <Route path='/' element={<Login/>}/>
+                                <Route path='/' element={<Home/>}/>
                                 <Route path='/home' element={<Home/>}/>
 
                                 <Route path='/login' element={<Login/>}/>
