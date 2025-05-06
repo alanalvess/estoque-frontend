@@ -34,22 +34,6 @@ export const atualizarAtributo = async (url: string, dados: Object, setDados: Fu
     setDados(resposta.data);
 }
 
-// export async function atualizarAtributo<T>(
-//     url: string,
-//     dados: Partial<T>,
-//     callback: (resposta: T) => void,
-//     config = {}
-// ) {
-//     try {
-//         const resposta = await axios.patch(url, dados, config);
-//         callback(resposta.data);
-//     } catch (error: any) {
-//         console.error("Erro no atualizarAtributo:", error.response?.data || error.message);
-//         throw error;
-//     }
-// }
-
-
 export const deletar = async (url: string, header: Object) => {
     await api.delete(url, header);
 }

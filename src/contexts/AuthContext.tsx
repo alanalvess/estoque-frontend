@@ -1,19 +1,14 @@
-import {createContext, ReactNode, useState} from 'react'
+import {createContext, ReactNode, useEffect, useState} from 'react'
 
 import {Toast, ToastAlerta} from '../utils/ToastAlerta'
 import {login} from '../services/Service'
 
 import UsuarioLogin from '../models/UsuarioLogin'
 
-// import Produto from '../models/Produto'
-
 interface AuthContextProps {
     usuario: UsuarioLogin;
-
     handleLogout(): void;
-
     handleLogin(usuario: UsuarioLogin): Promise<void>;
-
     isLoading: boolean;
 }
 
@@ -40,7 +35,10 @@ export function AuthProvider({children}: AuthProviderProps) {
         setIsLoading(true);
 
         try {
-            await login(`/usuarios/logar`, userLogin, setUsuario);
+            await login(`/usuarios/logar`, userLogin, (usuarioRetornado) => {
+                setUsuario(usuarioRetornado);
+                localStorage.setItem("usuario", JSON.stringify(usuarioRetornado)); // 🔸 Salva o usuário
+            });
             ToastAlerta('Seja bem-vindo!', Toast.Success);
         } catch (error: any) {
             ToastAlerta('Usuário ou senha não encontrado', Toast.Warning);
@@ -48,6 +46,7 @@ export function AuthProvider({children}: AuthProviderProps) {
             setIsLoading(false);
         }
     }
+
 
     function handleLogout() {
         setUsuario({
@@ -58,7 +57,15 @@ export function AuthProvider({children}: AuthProviderProps) {
             token: '',
             roles: []
         });
+        localStorage.removeItem("usuario"); // 🔸 Remove ao sair
     }
+
+    useEffect(() => {
+        const usuarioSalvo = localStorage.getItem("usuario");
+        if (usuarioSalvo) {
+            setUsuario(JSON.parse(usuarioSalvo));
+        }
+    }, []);
 
     return (
         <AuthContext.Provider
