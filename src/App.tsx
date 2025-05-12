@@ -24,6 +24,12 @@ import FormularioFornecedor from './components/fornecedores/formularioFornecedor
 import DeletarFornecedor from './components/fornecedores/deletarFornecedor/DeletarFornecedor.tsx';
 import Duvidas from './pages/duvidas/Duvidas.tsx';
 import Home from "./pages/home/Home.tsx";
+import FiltroFornecedores from "./components/fornecedores/filtroFornecedores/FiltroFornecedores.tsx";
+import Fornecedores from "./pages/fornecedores/Fornecedores.tsx";
+import Categorias from "./pages/categorias/Categorias.tsx";
+import Marcas from "./pages/marcas/Marcas.tsx";
+import FormularioMarca from "./components/marcas/formularioMarca/FormularioMarca.tsx";
+import DeletarMarca from "./components/marcas/deletarMarca/DeletarMarca.tsx";
 
 function App() {
 
@@ -37,8 +43,8 @@ function App() {
                     <div className='min-w-full m-0 p-0  dark:bg-gray-500 min-h-screen'>
 
                         <NavbarElement/>
-
                         <div className='dark:bg-gray-500 min-h-[90vh]'>
+
                             <Routes>
 
                                 <Route path='/' element={<Home/>}/>
@@ -47,19 +53,25 @@ function App() {
                                 <Route path='/login' element={<Login/>}/>
                                 <Route path='/cadastro' element={<Cadastro/>}/>
 
+                                <Route path='/categorias/all' element={<Categorias/>}/>
                                 <Route path='/cadastroCategoria' element={<FormularioCategoria/>}/>
                                 <Route path='/editarCategoria/:id' element={<FormularioCategoria/>}/>
-                                <Route path='/deletarCategoria/:id' element={<DeletarCategoria/>}/>
+                                {/*<Route path='/deletarCategoria/:id' element={<DeletarCategoria/>}/>*/}
 
+                                <Route path='/fornecedores/all' element={<Fornecedores/>}/>
                                 <Route path='/cadastroFornecedor' element={<FormularioFornecedor/>}/>
                                 <Route path='/editarFornecedor/:id' element={<FormularioFornecedor/>}/>
-                                <Route path='/deletarFornecedor/:id' element={<DeletarFornecedor/>}/>
-                                <Route path='/deletarFornecedor/:id' element={<Produtos/>}/>
+                                {/*<Route path='/deletarFornecedor/:id' element={<DeletarFornecedor/>}/>*/}
+
+                                <Route path='/marcas/all' element={<Marcas/>}/>
+                                <Route path='/cadastroMarca' element={<FormularioMarca/>}/>
+                                <Route path='/editarMarca/:id' element={<FormularioMarca/>}/>
+                                {/*<Route path='/deletarMarca/:id' element={<DeletarMarca/>}/>*/}
 
                                 <Route path='/produtos/all' element={<Produtos/>}/>
                                 <Route path='/cadastroProduto' element={<FormularioProduto/>}/>
                                 <Route path='/editarProduto/:id' element={<FormularioProduto/>}/>
-                                <Route path='/deletarProduto/:id' element={<DeletarProduto/>}/>
+                                {/*<Route path='/deletarProduto/:id' element={<DeletarProduto/>}/>*/}
 
                                 <Route path='/sobre' element={<Sobre/>}/>
                                 <Route path='/duvidas' element={<Duvidas/>}/>
