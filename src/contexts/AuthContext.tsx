@@ -10,6 +10,7 @@ interface AuthContextProps {
     handleLogout(): void;
     handleLogin(usuario: UsuarioLogin): Promise<void>;
     isLoading: boolean;
+    isHydrated: boolean;
 }
 
 interface AuthProviderProps {
@@ -21,6 +22,8 @@ export const AuthContext = createContext({} as AuthContextProps)
 export function AuthProvider({children}: AuthProviderProps) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isHydrated, setIsHydrated] = useState<boolean>(false);
+
 
     const [usuario, setUsuario] = useState<UsuarioLogin>({
         id: 0,
@@ -65,7 +68,9 @@ export function AuthProvider({children}: AuthProviderProps) {
         if (usuarioSalvo) {
             setUsuario(JSON.parse(usuarioSalvo));
         }
+        setIsHydrated(true); // agora sabemos que carregou (com ou sem usuário)
     }, []);
+
 
     return (
         <AuthContext.Provider
@@ -74,6 +79,7 @@ export function AuthProvider({children}: AuthProviderProps) {
                 handleLogin,
                 handleLogout,
                 isLoading,
+                isHydrated,
             }}
         >
             {children}

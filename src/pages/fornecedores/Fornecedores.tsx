@@ -110,7 +110,7 @@ function Fornecedores() {
                             dismissOnClick={true}
                             renderTrigger={() => (
                                 <Button color="gray" className="cursor-pointer focus:outline-none focus:ring-0">
-                                    Ordem <HiChevronDown className="ml-2 h-4 w-4"/>
+                                    <span>Ordem</span> <HiChevronDown className="ml-2 h-4 w-4"/>
                                 </Button>
                             )}
                         >
