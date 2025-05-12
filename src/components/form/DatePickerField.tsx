@@ -14,6 +14,7 @@ interface DatePickerFieldProps {
     placeholder?: string;
     minDate?: Date;
     maxDate?: Date;
+    title?: string;
 }
 
 export default function DatePickerField({
@@ -25,6 +26,7 @@ export default function DatePickerField({
                                             disabled = false,
                                             placeholder = '',
                                             className = '',
+                                            title = '',
                                             minDate,
                                             maxDate
                                         }: DatePickerFieldProps) {
@@ -72,8 +74,37 @@ export default function DatePickerField({
                 maxDate={maxDate}
                 labelTodayButton="Hoje"
                 labelClearButton="Limpar"
+                title={title}
                 disabled={disabled}
+                theme={{
+                    popup: {
+                        footer: {
+                            button: {
+                                base: "focus:ring-0 focus:ring-teal-300",
+                                today: "bg-teal-700 text-white hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700",
+                            }
+                        }
+                    },
+                    views: {
+                        days: {
+                            items: {
+                                item: {
+                                    selected: "bg-teal-600 text-white hover:bg-teal-700 dark:hover:bg-teal-500",
+                                }
+                            }
+                        },
+                        decades: {
+                            items: {
+                                item: {
+                                    selected: "bg-teal-700 hover:bg-teal-600",
+                                    disabled: "text-gray-500"
+                                }
+                            }
+                        }
+                    }
+                }}
             />
         </div>
     );
 }
+

@@ -25,6 +25,12 @@ export default function TextAreaField({
                 value={value}
                 onChange={onChange}
                 required={required}
+                theme={{
+                    base: "border border-gray-500 focus:outline-none focus:ring-1",
+                    colors: {
+                        gray: "focus:border-gray-400 focus:ring-gray-400 dark:focus:border-gray-600 dark:focus:ring-gray-600",
+                    },
+                }}
             />
         </div>
     );

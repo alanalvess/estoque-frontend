@@ -29,6 +29,16 @@ export default function SelectField({
                 value={value}
                 onChange={onChange}
                 required={required}
+                theme={{
+                    field: {
+                        select: {
+                            base: "border border-gray-500 focus:outline-none focus:ring-1",
+                            colors: {
+                                gray: "focus:border-gray-400 focus:ring-gray-400 dark:focus:border-gray-600 dark:focus:ring-gray-600",
+                            },
+                        },
+                    }
+                }}
             >
                 <option value='' disabled>
                     Selecione...

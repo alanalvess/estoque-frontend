@@ -10,6 +10,7 @@ type InputProps = {
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     placeholder?: string;
+    color?: string;
 };
 
 export default function InputField({
@@ -21,9 +22,10 @@ export default function InputField({
                                        required = false,
                                        placeholder = '',
                                        className = '',
+                                       color = 'gray',
                                    }: InputProps) {
     return (
-        <div className='flex flex-col  w-full'>
+        <div className='flex flex-col w-full'>
             <Label htmlFor={name}>{label}</Label>
             <TextInput
                 id={name}
@@ -34,6 +36,17 @@ export default function InputField({
                 placeholder={placeholder}
                 className={className}
                 required={required}
+                color={color}
+                theme={{
+                    field: {
+                        input: {
+                            base: "border border-gray-500 focus:outline-none focus:ring-1",
+                            colors: {
+                                gray: "focus:border-gray-400 focus:ring-gray-400 dark:focus:border-gray-600 dark:focus:ring-gray-600",
+                            },
+                        },
+                    }
+                }}
             />
         </div>
     );
