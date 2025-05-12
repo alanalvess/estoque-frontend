@@ -1,5 +1,6 @@
 import Categoria from './Categoria';
 import Fornecedor from './Fornecedor.ts';
+import Marca from "./Marca.ts";
 
 export enum UnidadeMedida {
     UNIDADE = 'UNIDADE',
@@ -32,7 +33,6 @@ export default interface Produto {
 
     unidadeMedida: UnidadeMedida | null;
     codigo: string;
-    marca: string;
     estoqueMinimo: number;
     estoqueMaximo: number;
     dataValidade: string;
@@ -40,5 +40,6 @@ export default interface Produto {
     dataSaida: string;
 
     categoria: Categoria | null;
+    marca: Marca | null;
     fornecedor: Fornecedor | null;
 }

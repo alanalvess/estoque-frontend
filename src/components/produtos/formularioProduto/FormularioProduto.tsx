@@ -1,6 +1,5 @@
 import {ChangeEvent, useContext, useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {RotatingLines} from 'react-loader-spinner'
 
 import {AuthContext} from '../../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta'
@@ -8,7 +7,7 @@ import {atualizar, buscar, cadastrar} from '../../../services/Service'
 
 import Categoria from '../../../models/Categoria'
 import Produto from '../../../models/Produto'
-import {Button, ToggleSwitch} from 'flowbite-react'
+import {Button, Spinner, ToggleSwitch} from 'flowbite-react'
 import Fornecedor from '../../../models/Fornecedor.ts';
 import InputField from '../../form/InputField.tsx';
 import TextAreaField from '../../form/TextInputField.tsx';
@@ -16,10 +15,17 @@ import SelectField from '../../form/SelectField.tsx';
 import {UnidadeDeMedida} from '../../../utils/UnidadeDeMedida.ts';
 import {HiChevronLeft} from "react-icons/hi2";
 import DatePickerField from "../../form/DatePickerField.tsx";
+import ToggleSwitchField from "../../form/ToggleSwitchField.tsx";
+import Marca from "../../../models/Marca.ts";
 
 'use client';
 
 const categoriaInicial: Categoria = {
+    id: 0,
+    nome: ''
+};
+
+const marcaInicial: Marca = {
     id: 0,
     nome: ''
 };
@@ -42,13 +48,13 @@ const produtoInicial: Produto = {
     disponivel: true,
     unidadeMedida: null,
     codigo: '',
-    marca: '',
     estoqueMinimo: 0,
     estoqueMaximo: 0,
     dataValidade: '',
     dataEntrada: new Date().toISOString().split('T')[0],
     dataSaida: '',
     categoria: null,
+    marca: null,
     fornecedor: null
 };
 
@@ -62,8 +68,10 @@ function FormularioProduto() {
     const [estado, setEstado] = useState({
         isLoading: false,
         categorias: [] as Categoria[],
+        marcas: [] as Marca[],
         fornecedores: [] as Fornecedor[],
         categoria: categoriaInicial,
+        marca: marcaInicial,
         fornecedor: fornecedorInicial,
         produto: produtoInicial
     });
@@ -85,10 +93,11 @@ function FormularioProduto() {
             produto: {
                 ...prev.produto,
                 categoria: prev.categoria,
+                marca: prev.marca,
                 fornecedor: prev.fornecedor
             }
         }));
-    }, [estado.categoria, estado.fornecedor]);
+    }, [estado.categoria, estado.marca, estado.fornecedor]);
 
     async function carregarDados() {
         try {
@@ -96,6 +105,12 @@ function FormularioProduto() {
                 buscar('/categorias/all', (data) => setEstado(
                     prev => (
                         { ...prev, categorias: data })),
+                    authHeaders
+                ),
+
+                buscar('/marcas/all', (data) => setEstado(
+                        prev => (
+                            { ...prev, marcas: data })),
                     authHeaders
                 ),
 
@@ -117,15 +132,19 @@ function FormularioProduto() {
     }
 
     function atualizarCampo(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-        const { name, value } = e.target;
+        const { name, value, type } = e.target;
+
+        const novoValor = (type === 'number') ? Number(value) : value;
+
         setEstado(prev => ({
             ...prev,
             produto: {
                 ...prev.produto,
-                [name]: value
+                [name]: novoValor
             }
         }));
     }
+
 
     function handleCheckboxChange(checked: boolean) {
         setEstado(prev => ({
@@ -147,6 +166,9 @@ function FormularioProduto() {
     }
 
     async function salvarProduto() {
+
+        if (!validarProduto()) return; // impede envio se houver erro
+
         const endpoint = id ? `/produtos/${id}` : '/produtos/cadastrar';
         const metodo = id ? atualizar : cadastrar;
         const mensagem = id ? 'Produto atualizado' : 'Produto cadastrado';
@@ -177,14 +199,54 @@ function FormularioProduto() {
         navigate('/produtos/all');
     }
 
+    function voltarFormulario() {
+        if (window.history.length > 1) {
+            navigate(-1);
+        } else {
+            navigate('/categorias/all'); // ou qualquer rota padrão
+        }
+    }
+
+    function validarProduto(): boolean {
+        const produto = estado.produto;
+
+        const valor = Number(produto.valor);
+        const quantidade = Number(produto.quantidade);
+        const estoqueMinimo = Number(produto.estoqueMinimo);
+        const estoqueMaximo = Number(produto.estoqueMaximo);
+
+        if (isNaN(valor) || valor < 0) {
+            ToastAlerta('O valor do produto não pode ser negativo.', Toast.Warning);
+            return false;
+        }
+
+        if (isNaN(quantidade) || quantidade < 0) {
+            ToastAlerta('A quantidade do produto não pode ser negativa.', Toast.Warning);
+            return false;
+        }
+
+        if (isNaN(estoqueMinimo) || isNaN(estoqueMaximo)) {
+            ToastAlerta('Estoque mínimo e máximo devem ser números válidos.', Toast.Warning);
+            return false;
+        }
+
+        if (estoqueMaximo < estoqueMinimo) {
+            ToastAlerta('O estoque máximo não pode ser menor que o estoque mínimo.', Toast.Warning);
+            return false;
+        }
+
+        return true;
+    }
+
+
     return (
         <>
             <div className="py-30 px-4  min-h-screen">
                 <div className="max-w-4xl mx-auto  rounded-2xl shadow-xl p-10">
                     <Button
-                        onClick={retornar} // volta uma página no histórico
-                        className='bg-gray-300 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700 font-bold px-6 py-3 transition-all duration-300 cursor-pointer'
-
+                        onClick={voltarFormulario} // volta uma página no histórico
+                        color='light'
+                        className="cursor-pointer border-none flex items-center text-sm text-gray-600 dark:text-gray-300 hover:underline hover:text-gray-800 dark:hover:text-white dark:bg-gray-500 dark:hover:bg-gray-600 transition-all"
                     >
                         <HiChevronLeft className="mr-2 h-5 w-5"/>
                         Voltar
@@ -239,6 +301,15 @@ function FormularioProduto() {
                             required
                         />
 
+                        <SelectField
+                            label="Marca do Produto"
+                            name="marca"
+                            value={estado.produto.marca?.id || ''}
+                            options={estado.marcas.map((cat) => ({ value: cat.id, label: cat.nome }))}
+                            onChange={(e) => buscar(`/marcas/${e.currentTarget.value}`, (data) => setEstado(prev => ({ ...prev, marca: data })), authHeaders)}
+                            required
+                        />
+
                         <DatePickerField
                             label="Data de Entrada"
                             name="dataEntrada"
@@ -253,18 +324,10 @@ function FormularioProduto() {
                         <DatePickerField
                             label="Validade"
                             name="dataValidade"
+                            // title='Data de Validade'
                             value={estado.produto.dataValidade}
                             onChange={atualizarCampo}
                             minDate={new Date()}  // Aqui você usa a data no formato local
-                            required
-                        />
-
-
-                        <InputField
-                            label="Marca do Produto"
-                            name="marca"
-                            value={estado.produto.marca}
-                            onChange={atualizarCampo}
                             required
                         />
 
@@ -312,9 +375,10 @@ function FormularioProduto() {
                         </div>
 
                         <div className="md:col-span-2 flex justify-start">
-                            <ToggleSwitch
+                            <ToggleSwitchField
+                                name="disponivel"
+                                label='Produto Disponível?'
                                 checked={estado.produto.disponivel}
-                                label="Produto Disponível?"
                                 onChange={handleCheckboxChange}
                             />
                         </div>
@@ -322,17 +386,11 @@ function FormularioProduto() {
                         <div className="md:col-span-2 flex justify-center mt-6">
                             <Button
                                 disabled={id !== undefined && estado.produto.nome === ''}
-                                className="rounded bg-gray-500 hover:bg-gray-700 text-white font-bold px-6 py-3 flex justify-center items-center transition-all duration-300"
+                                className='cursor-pointer rounded text-gray-100 bg-teal-500 hover:bg-teal-700 w-1/2 py-2 mx-auto flex justify-center dark:bg-teal-600 dark:hover:bg-teal-800 focus:ring-0'
                                 type="submit"
                             >
                                 {estado.isLoading ? (
-                                    <RotatingLines
-                                        strokeColor="white"
-                                        strokeWidth="5"
-                                        animationDuration="0.75"
-                                        width="24"
-                                        visible={true}
-                                    />
+                                    <Spinner aria-label="Default status example" />
                                 ) : id !== undefined ? (
                                     <span>Editar</span>
                                 ) : (

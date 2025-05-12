@@ -1,109 +1,83 @@
 import {useContext, useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
-import {RotatingLines} from 'react-loader-spinner'
+import {useNavigate, useParams} from 'react-router'
 
 import {AuthContext} from '../../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta'
 import {buscar, deletar} from '../../../services/Service'
 
 import Produto from '../../../models/Produto'
-import {Button} from 'flowbite-react';
+import {Button, Card, Modal, ModalBody, ModalHeader, Spinner} from 'flowbite-react';
+import DeleteImg from "../../../assets/images/delete.png";
 
-function DeletarProduto() {
+interface DeletarProdutoProps {
+    isOpen: boolean;
+    onClose: () => void;
+    produto: Produto;
+    aoDeletar: (id: number) => void; // ✅ nova prop
+}
 
-    const navigate = useNavigate();
+function DeletarProduto({ isOpen, onClose, produto, aoDeletar }:  DeletarProdutoProps) {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [produto, setProduto] = useState<Produto>({} as Produto);
-
-    const {id} = useParams<{ id: string }>();
-
-    const {usuario, handleLogout} = useContext(AuthContext);
+    const {usuario} = useContext(AuthContext);
     const token = usuario.token;
 
-    async function buscarPorId(id: string) {
-        try {
-            await buscar(`/produtos/${id}`, setProduto, {headers: {Authorization: token}});
-        } catch (error: any) {
-            if (error.toString().includes('403')) {
-                ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
-                handleLogout();
-            }
-        }
-    }
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function deletarProduto() {
         setIsLoading(true);
 
         try {
-            await deletar(`/produtos/${id}`, {headers: {Authorization: token}});
+            await deletar(`/produtos/${produto.id}`, {headers: {Authorization: token}});
             ToastAlerta('Produto apagado', Toast.Success);
-        } catch (error) {
+
+            aoDeletar(produto.id);
+            onClose();
+
+        } catch (error: any) {
             ToastAlerta('Erro ao apagar o Produto', Toast.Error);
         }
 
         setIsLoading(false);
-        retornar();
     }
-
-    function retornar() {
-        navigate('/produtos/all');
-    }
-
-    useEffect(() => {
-        if (token === '') {
-            ToastAlerta('Você precisa estar logado', Toast.Warning);
-            navigate('/login');
-        }
-    }, [token]);
-
-    useEffect(() => {
-        if (id !== undefined) {
-            buscarPorId(id);
-        }
-    }, [id]);
 
     return (
-        <>
-            <div className="pt-40 px-4">
-                <div className="lg:w-1/3 mx-auto bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
-                    <h4 className="text-3xl font-bold text-center text-gray-800 mb-6">Deletar Produto?</h4>
+        <Modal show={isOpen} onClose={onClose} popup>
+            <ModalHeader/>
+            <ModalBody>
+                <Card className="max-w-sm mx-auto lg:gap-10" imgSrc={DeleteImg} horizontal>
+                    <div className="text-center lg:text-left">
+                        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
+                            Deletar Produto?
+                        </h5>
+                        <p className="font-normal text-gray-700 dark:text-gray-500">
+                            <p className="mb-4 text-lg text-gray-700 dark:text-gray-300 italic">
+                                {produto.nome}
+                            </p>
 
-                    <div className="bg-gray-50 flex flex-col gap-4 rounded-xl overflow-auto p-6">
-                        <div>
-                            <h4 className="text-xl font-semibold uppercase text-gray-700">{produto.nome}</h4>
-                            <p className="text-gray-600 mt-2">{produto.descricao}</p>
-                        </div>
-
-                        <div className="flex gap-4 mt-4">
+                        </p>
+                        <div className="flex gap-2 mt-10 justify-center">
                             <Button
-                                className="w-full bg-gray-300 text-gray-800 hover:bg-gray-400 transition-all duration-300 p-2 rounded-md font-medium"
-                                onClick={retornar}
+                                className="cursor-pointer text-white bg-gray-400 hover:bg-gray-600 w-24 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none focus:ring-0"
+                                onClick={onClose}
                             >
                                 Não
                             </Button>
-
                             <Button
-                                className="w-full bg-red-500 text-white hover:bg-red-600 transition-all duration-300 p-2 rounded-md font-medium flex items-center justify-center"
+                                className="cursor-pointer text-white bg-rose-600 hover:bg-rose-800 w-24 dark:bg-rose-600 dark:hover:bg-rose-700 flex justify-center focus:outline-none focus:ring-0"
                                 onClick={deletarProduto}
                             >
                                 {isLoading ? (
-                                    <RotatingLines
-                                        strokeColor="white"
-                                        strokeWidth="5"
-                                        animationDuration="0.75"
-                                        width="24"
-                                        visible={true}
-                                    />
+
+                                    <Spinner aria-label="Default status example" />
                                 ) : (
                                     <span>Sim</span>
                                 )}
                             </Button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </>
+                </Card>
+            </ModalBody>
+        </Modal>
     )
 }
 
