@@ -1,101 +1,96 @@
 import {useContext, useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router'
-import {RotatingLines} from 'react-loader-spinner'
+import DeleteImg from "../../../assets/images/delete.png";
 
 import {AuthContext} from '../../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta'
 import {buscar, deletar} from '../../../services/Service'
 
 import Fornecedor from '../../../models/Fornecedor'
-import {Button} from 'flowbite-react';
+import {Button, Card, Modal, ModalBody, ModalHeader, Spinner} from 'flowbite-react';
+import {formatarCpfCnpj, formatarTelefone} from "../../../utils/formatters.tsx";
 
-function DeletarFornecedor() {
+interface DeletarFornecedorProps {
+    isOpen: boolean;
+    onClose: () => void;
+    fornecedor: Fornecedor;
+    aoDeletar: (id: number) => void; // ✅ nova prop
+}
 
-    const navigate = useNavigate();
+export function DeletarFornecedor({isOpen, onClose, fornecedor, aoDeletar}: DeletarFornecedorProps) {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [fornecedor, setFornecedor] = useState<Fornecedor>({} as Fornecedor);
-
-    const {id} = useParams<{ id: string }>();
-
-    const {usuario, handleLogout} = useContext(AuthContext);
+    const {usuario} = useContext(AuthContext);
     const token = usuario.token;
 
-    async function buscarPorId(id: string) {
-        try {
-            await buscar(`/fornecedores/${id}`, setFornecedor, {headers: {Authorization: token}});
-        } catch (error: any) {
-            if (error.toString().includes('403')) {
-                ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
-                handleLogout();
-            }
-        }
-    }
+    const [isLoading, setIsLoading] = useState(false);
 
     async function deletarFornecedor() {
         setIsLoading(true);
 
         try {
-            await deletar(`/fornecedores/${id}`, {headers: {Authorization: token}});
-            ToastAlerta('Fornecedor apagada', Toast.Success);
+            await deletar(`/fornecedores/${fornecedor.id}`, {headers: {Authorization: token}});
+            ToastAlerta('Fornecedor apagado', Toast.Success);
+
+            aoDeletar(fornecedor.id); // ✅ chama callback passando ID do excluído
+            onClose(); // fecha o modal
+
         } catch (error) {
-            ToastAlerta('Erro ao apagar a Fornecedor', Toast.Error);
+            ToastAlerta('Erro ao apagar o fornecedor', Toast.Error);
         }
 
-        retornar();
+        setIsLoading(false);
     }
-
-    function retornar() {
-        navigate('/produtos/all');
-    }
-
-    useEffect(() => {
-        if (token === '') {
-            ToastAlerta('Você precisa estar logado', Toast.Warning);
-            navigate('/login');
-        }
-    }, [token]);
-
-    useEffect(() => {
-        if (id !== undefined) {
-            buscarPorId(id);
-        }
-    }, [id]);
 
     return (
-        <>
-            <div className='pt-40'>
-
-                <div className='lg:w-1/3 mx-auto lg:bg-white lg:border border-gray-200 rounded-lg lg:shadow-lg '>
-                    <h4 className='text-2xl text-center my-4'>Deletar fornecedor?</h4>
-
-                    <div className='border flex flex-col mx-20 my-5 rounded-xl overflow-auto justify-between'>
-                        <p className='p-2 text-2xl text-center bg-gray-200 h-full'>{fornecedor.nome}</p>
-
-                        <div className='flex'>
-                            <Button className='text-gray-100 bg-gray-400 hover:bg-gray-700 w-full py-2'
-                                    onClick={retornar}>Não</Button>
-
+        <Modal show={isOpen} onClose={onClose} popup>
+            <ModalHeader/>
+            <ModalBody>
+                <Card className="max-w-sm mx-auto lg:gap-10" imgSrc={DeleteImg} horizontal>
+                    <div className="text-center lg:text-left">
+                        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
+                            Deletar fornecedor?
+                        </h5>
+                        <p className="font-normal text-gray-700 dark:text-gray-500">
+                            <p className="mb-4 text-lg text-gray-700 dark:text-gray-300 italic">
+                                {fornecedor.nome}
+                            </p>
+                            <p className="mb-2">
+                                <span className="font-semibold">CNPJ/CPF: </span>
+                                <span className='italic'>{formatarCpfCnpj(fornecedor.cnpj)}</span>
+                            </p>
+                            <p className="mb-2">
+                                <span className="font-bold">E-Mail: </span>
+                                <span className='italic'>{fornecedor.email}</span>
+                            </p>
+                            <p className="mb-2">
+                                <span className="font-bold">Telefone: </span>
+                                <span className='italic'>{formatarTelefone(fornecedor.telefone)}</span>
+                            </p>
+                        </p>
+                        <div className="flex gap-2 mt-10 justify-center">
                             <Button
-                                className='w-full text-gray-100 bg-gray-500 hover:bg-gray-700 flex items-center justify-center'
-                                onClick={deletarFornecedor}>
-                                {isLoading ?
-                                    <RotatingLines
-                                        strokeColor='white'
-                                        strokeWidth='5'
-                                        animationDuration='0.75'
-                                        width='24'
-                                        visible={true}
-                                    /> :
+                                className="cursor-pointer text-white bg-gray-400 hover:bg-gray-600 w-24 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none focus:ring-0"
+                                onClick={onClose}
+                            >
+                                Não
+                            </Button>
+                            <Button
+                                className="cursor-pointer text-white bg-rose-600 hover:bg-rose-800 w-24 dark:bg-rose-600 dark:hover:bg-rose-700 flex justify-center focus:outline-none focus:ring-0"
+                                onClick={deletarFornecedor}
+                            >
+                                {isLoading ? (
+                                    <Spinner aria-label="Default status example" />
+                                ) : (
                                     <span>Sim</span>
-                                }
+                                )}
                             </Button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </>
-    )
+                </Card>
+            </ModalBody>
+        </Modal>
+
+    );
 }
 
 export default DeletarFornecedor;
