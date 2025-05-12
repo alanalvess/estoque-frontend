@@ -1,13 +1,12 @@
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {RotatingLines} from 'react-loader-spinner';
 
 import {AuthContext} from '../../../contexts/AuthContext';
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta';
 import {atualizar, buscar, cadastrar} from '../../../services/Service';
 
 import Categoria from '../../../models/Categoria';
-import {Button} from 'flowbite-react';
+import {Button, Spinner} from 'flowbite-react';
 import InputField from '../../form/InputField.tsx';
 import {HiChevronLeft} from "react-icons/hi2";
 
@@ -112,7 +111,15 @@ function FormularioCategoria() {
     }
 
     function retornar() {
-        navigate('/produtos/all');
+        navigate('/categorias/all');
+    }
+
+    function voltarFormulario() {
+        if (window.history.length > 1) {
+            navigate(-1);
+        } else {
+            navigate('/categorias/all'); // ou qualquer rota padrão
+        }
     }
 
     return (
@@ -120,15 +127,15 @@ function FormularioCategoria() {
             <div className="py-30 px-4 min-h-screen">
                 <div className="max-w-4xl mx-auto rounded-2xl shadow-xl p-10">
                     <Button
-                        onClick={retornar} // volta uma página no histórico
-                        className='bg-gray-300 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700 font-bold px-6 py-3 transition-all duration-300 cursor-pointer'
-
+                        onClick={voltarFormulario}
+                        color='light'
+                        className="cursor-pointer border-none flex items-center text-sm text-gray-600 dark:text-gray-300 hover:underline hover:text-gray-800 dark:hover:text-white dark:bg-gray-500 dark:hover:bg-gray-600 transition-all"
                     >
                         <HiChevronLeft className="mr-2 h-5 w-5"/>
                         Voltar
                     </Button>
 
-                    <h2 className="text-4xl font-bold text-center text-gray-800 mb-10">
+                    <h2 className="text-4xl font-bold text-center text-gray-700 mb-10">
                         {id === undefined ? 'Cadastrar Categoria' : 'Editar Categoria'}
                     </h2>
 
@@ -141,6 +148,7 @@ function FormularioCategoria() {
                         <InputField
                             label='Nome da Categoria'
                             name='nome'
+                            className="focus:outline-none focus:ring-0 focus:border-none"
                             value={estado.categoria.nome}
                             onChange={atualizarCampo}
                             required
@@ -148,17 +156,11 @@ function FormularioCategoria() {
 
                         <Button
                             disabled={id !== undefined && estado.categoria.nome === ''}
-                            className='rounded text-gray-100 bg-gray-500 hover:bg-gray-700 w-1/2 py-2 mx-auto flex justify-center'
+                            className='cursor-pointer rounded text-gray-100 bg-teal-500 hover:bg-teal-700 w-1/2 py-2 mx-auto flex justify-center dark:bg-teal-600 dark:hover:bg-teal-800 focus:ring-0'
                             type='submit'
                         >
                             {estado.isLoading ?
-                                <RotatingLines
-                                    strokeColor='white'
-                                    strokeWidth='5'
-                                    animationDuration='0.75'
-                                    width='24'
-                                    visible={true}
-                                /> :
+                                <Spinner aria-label="Default status example" /> :
                                 id !== undefined ? <span>Editar</span> : <span>Cadastrar</span>
                             }
                         </Button>
