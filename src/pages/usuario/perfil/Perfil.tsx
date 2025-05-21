@@ -1,13 +1,13 @@
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Link, useParams} from "react-router-dom";
-import {Button, Card, Spinner, Table, TableHead, TableHeadCell, TableRow
-} from 'flowbite-react';
+import {Avatar, Button, Card, Spinner} from 'flowbite-react';
 
 import {AuthContext} from '../../../contexts/AuthContext';
-import {ToastAlerta, Toast} from '../../../utils/ToastAlerta';
+import {Toast, ToastAlerta} from '../../../utils/ToastAlerta';
 
 import Usuario from "../../../models/Usuario.ts";
 import {buscar} from "../../../services/Service.ts";
+import UserImg from "../../../assets/images/user.png"
 
 export default function Perfil() {
 
@@ -35,23 +35,24 @@ export default function Perfil() {
         }
     }
 
+    useEffect(() => {
+        if (isHydrated && id) {
+            buscarUsuario();
+        }
+    }, [isHydrated, id]);
+
     return (
         <>
             <div className="py-20 px-5 md:px-40 space-y-4 mt-10">
 
                 <div className="flex justify-between items-center gap-4 flex-wrap">
-                    <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-300">Usuários</h1>
+                    <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-300">Perfil</h1>
 
                     <div className="flex items-center gap-4">
                         <Link to={`/editarUsuario/${usuario.id}`}
                               className="border-b-2 text-teal-800 hover:text-teal-600 dark:text-gray-200 dark:hover:text-teal-400">
                             Editar Meu Perfil
                         </Link>
-
-                        <Button>
-                            teste
-                        </Button>
-
                     </div>
                 </div>
 
@@ -59,23 +60,15 @@ export default function Perfil() {
                     <Spinner aria-label="Default status example"/>
                 ) : (
                     <Card className="p-0 overflow-x-auto">
-                        <Table
-                            hoverable
-                            theme={{
-                                head: {
-                                    cell: {
-                                        base: "bg-gray-300 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-gray-900"
-                                    }
-                                },
-                            }}
-                        >
-                            <TableHead>
-                                <TableRow>
-                                    <TableHeadCell className="text-center">Nome</TableHeadCell>
-                                    <TableHeadCell className="text-center">Ações</TableHeadCell>
-                                </TableRow>
-                            </TableHead>
-                        </Table>
+                        <div className="flex flex-col items-center text-center">
+                            <Avatar img={UserImg} alt="Foto do usuário" rounded size="xl"/>
+                            <h2 className="text-xl font-semibold mt-4">{usuario.nome}</h2>
+                            <p className="text-sm text-gray-500">{usuario.email}</p>
+                            <span
+                                className="mt-2 inline-block px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
+                                {usuario.roles}
+                            </span>
+                        </div>
                     </Card>
                 )}
             </div>
