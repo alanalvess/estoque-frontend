@@ -1,4 +1,3 @@
-import {ChangeEvent} from 'react';
 import {ToggleSwitch} from "flowbite-react";
 
 type ToggleSwitchProps = {
@@ -39,4 +38,3 @@ export default function ToggleSwitchField({
         </div>
     )
 }
-

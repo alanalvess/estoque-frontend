@@ -1,6 +1,6 @@
 import {useContext} from 'react'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
-import {SignIn, SignOut} from '@phosphor-icons/react'
+import {SignIn} from '@phosphor-icons/react'
 
 import {AuthContext} from '../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../utils/ToastAlerta'
@@ -8,6 +8,7 @@ import {Toast, ToastAlerta} from '../../utils/ToastAlerta'
 import Logo from '../../assets/images/gestok.png'
 
 import {Button, DarkThemeToggle, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle} from 'flowbite-react'
+import DropdownPerfil from "./dropdownPerfil/DropdownPerfil.tsx";
 
 function NavbarElement() {
 
@@ -20,7 +21,6 @@ function NavbarElement() {
     const location = useLocation();
 
     const links = [
-        // {to: '/home', label: 'Home'},
         {to: '/produtos/all', label: 'Produtos'},
         {to: '/categorias/all', label: 'Categorias'},
         {to: '/fornecedores/all', label: 'Fornecedores'},
@@ -46,20 +46,15 @@ function NavbarElement() {
                     </NavbarBrand>
 
                     <div className="flex md:order-2">
-                        <Link to='/home' onClick={logout} className='flex items-center justify-center'>
-                            <Button
-                                className='bg-rose-600 hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-700 focus:outline-none focus:ring-0 cursor-pointer'>
-                                <span className='text-xl '>Sair</span>
-                                <SignOut className='p-1 rounded-lg ' size={40} weight='fill'/>
-                            </Button>
-                        </Link>
+
+                        <DropdownPerfil/>
+
                         <DarkThemeToggle
                             className='cursor-pointer mx-4 hover:bg-gray-700 focus:outline-none focus:ring-0'/>
                         <NavbarToggle className='focus:outline-none focus:ring-0'/>
                     </div>
 
                     <NavbarCollapse>
-
                         {links.map(link => (
                             <Link key={link.to} to={link.to}>
                                 <NavbarLink
@@ -101,8 +96,10 @@ function NavbarElement() {
                                 <SignIn className='p-1 rounded-lg ' size={40} weight='fill'/>
                             </Button>
                         </Link>
-                        <DarkThemeToggle className='cursor-pointer mx-4 hover:bg-gray-700 focus:outline-none focus:ring-0'/>
-                        {/*<NavbarToggle className='focus:outline-none focus:ring-0'/>*/}
+
+                        <DarkThemeToggle
+                            className='cursor-pointer mx-4 hover:bg-gray-700 focus:outline-none focus:ring-0'
+                        />
                     </div>
                 </Navbar>
             </>

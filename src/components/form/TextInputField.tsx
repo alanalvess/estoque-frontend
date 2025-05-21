@@ -20,7 +20,6 @@ export default function TextAreaField({
         <div className='flex flex-col w-full'>
             <Label htmlFor={name}>{label}</Label>
             <Textarea
-                // className='border-2 border-slate-700 rounded p-2 focus:border-gray-500 focus:ring-1 focus:ring-gray-500'
                 name={name}
                 value={value}
                 onChange={onChange}
@@ -33,5 +32,5 @@ export default function TextAreaField({
                 }}
             />
         </div>
-    );
+    )
 }

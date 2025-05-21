@@ -59,9 +59,7 @@ export default function FiltroList<T extends { id: any; nome: string }>({
                                     on: ""
                                 },
                                 icon: "mr-2 h-4 w-4 fill-current"
-
                             }
-
                         }}
                     >
                         {renderItem(item)}
@@ -73,5 +71,5 @@ export default function FiltroList<T extends { id: any; nome: string }>({
                 </ListGroupItem>
             )}
         </ListGroup>
-    );
+    )
 }

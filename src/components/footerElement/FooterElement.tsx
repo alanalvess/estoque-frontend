@@ -1,13 +1,10 @@
 import {
     Footer,
-    FooterBrand,
     FooterCopyright,
     FooterDivider,
-    FooterLink,
     FooterLinkGroup
 } from 'flowbite-react';
 
-import Logo from '../../assets/images/gestok.png';
 import {CiCalculator2} from "react-icons/ci";
 import {Calculadora} from "../calculadora/Calculadora.tsx";
 import {useState} from "react";
@@ -45,12 +42,9 @@ function FooterElement() {
                         year={2025}
                     />
                 </div>
-
-
             </div>
         </Footer>
     );
 }
-
 
 export default FooterElement;

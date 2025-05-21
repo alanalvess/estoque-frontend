@@ -1,13 +1,12 @@
 'use client';
 
-import {Label, Datepicker} from 'flowbite-react';
-import {ToastAlerta, Toast} from "../../utils/ToastAlerta.ts";
+import {Datepicker, Label} from 'flowbite-react';
 
 interface DatePickerFieldProps {
     className?: string;
     label?: string;
     name: string;
-    value?: string; // Ex: '2025-05-05'
+    value?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     disabled?: boolean;
@@ -105,6 +104,6 @@ export default function DatePickerField({
                 }}
             />
         </div>
-    );
+    )
 }
 
