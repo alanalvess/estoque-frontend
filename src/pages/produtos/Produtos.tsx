@@ -137,13 +137,15 @@ function Produtos() {
             resultado = resultado.filter(p => p.fornecedor && filtroFornecedores.selecionados.includes(p.fornecedor.nome));
         }
 
-        order === 'asc'
-            ? resultado
-                .sort((a, b) => a.nome.localeCompare(b.nome))
-                .sort((a, b) => Number(b.disponivel) - Number(a.disponivel))
-            : resultado
-                .sort((a, b) => b.nome.localeCompare(a.nome))
-                .sort((a, b) => Number(a.disponivel) - Number(b.disponivel));
+        resultado.sort((a, b) => {
+            const disponivelCompare = Number(b.disponivel) - Number(a.disponivel);
+            if (disponivelCompare !== 0) return disponivelCompare;
+
+            return order === 'asc'
+                ? a.nome.localeCompare(b.nome)
+                : b.nome.localeCompare(a.nome);
+        });
+
 
         return resultado;
     }, [produtos, filtroCategorias, filtroMarcas, filtroFornecedores]);
