@@ -22,7 +22,7 @@ export default function FiltroList<T extends { id: any; nome: string }>({
     return (
         <ListGroup className="sm:w-48 mx-auto mb-4 max-h-[60vh] overflow-y-auto rounded-xl"
                    theme={{
-                       base: "list-none rounded-none border-none border-gray-200 bg-white text-left text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white",
+                       base: "list-none rounded-none border-none border-gray-200 bg-gray-100 text-left text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white",
 
                    }}
         >
@@ -47,7 +47,7 @@ export default function FiltroList<T extends { id: any; nome: string }>({
                             link: {
                                 base: "flex w-full items-center border-b border-gray-200 px-4 py-2 dark:border-gray-600",
                                 active: {
-                                    off: "hover:bg-gray-100 hover:text-gray-700 focus:text-gray-700 focus:outline-none focus:ring-0 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500",
+                                    off: "hover:bg-gray-200 hover:text-gray-700 focus:text-gray-700 focus:outline-none focus:ring-0 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500",
                                     on: "bg-gray-700 text-white dark:bg-gray-800"
                                 },
                                 disabled: {
