@@ -1,15 +1,6 @@
-import {Link} from 'react-router-dom'
-
 import Categoria from '../../../models/Categoria'
 
 'use client';
-
-import {
-    Dropdown,
-    DropdownDivider,
-    DropdownItem
-} from 'flowbite-react';
-import {FaEdit, FaTrashAlt} from "react-icons/fa";
 
 interface FiltroCategoriasProps {
     categoria: Categoria;
@@ -19,17 +10,6 @@ function FiltroCategorias({categoria}: FiltroCategoriasProps) {
 
     return (
         <>
-            {/*<Dropdown label='' inline>*/}
-            {/*    <DropdownItem>*/}
-            {/*        <Link to={`/editarCategoria/${categoria.id}`}*/}
-            {/*              className='w-full'>Editar</Link>*/}
-            {/*    </DropdownItem>*/}
-            {/*    <DropdownDivider/>*/}
-            {/*    <DropdownItem>*/}
-            {/*        <Link to={`/deletarMarca/${categoria.id}`}*/}
-            {/*              className='w-full '>Deletar</Link>*/}
-            {/*    </DropdownItem>*/}
-            {/*</Dropdown>*/}
             <div className="flex flex-wrap justify-between items-center w-full">
                 <span
                     className='flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-start sm:break-words'
@@ -37,16 +17,6 @@ function FiltroCategorias({categoria}: FiltroCategoriasProps) {
                 >
                     {categoria.nome}
                 </span>
-
-                {/*<div className="flex gap-2 ml-2">*/}
-                {/*    <Link to={`/editarCategoria/${categoria.id}`} className='w-full text-blue-600'>*/}
-                {/*        <FaEdit/>*/}
-                {/*    </Link>*/}
-
-                {/*    <Link to={`/deletarCategoria/${categoria.id}`} className='w-full text-red-600'>*/}
-                {/*        <FaTrashAlt/>*/}
-                {/*    </Link>*/}
-                {/*</div>*/}
             </div>
         </>
     )

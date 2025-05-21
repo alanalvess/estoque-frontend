@@ -1,18 +1,15 @@
-import {Button, Card, Modal, ModalBody, ModalFooter, ModalHeader, TableCell, TableRow} from 'flowbite-react';
+import {Button, TableCell, TableRow} from 'flowbite-react';
 import {Link} from 'react-router-dom'
 import Categoria from '../../../models/Categoria'
 import {HiPencilAlt, HiTrash} from "react-icons/hi";
 import {useState} from "react";
 import {HiEye} from "react-icons/hi2";
-import CategoriaImg from "../../../assets/images/categoria.png";
 import DeletarCategoria from "../deletarCategoria/DeletarCategoria.tsx";
 import ExibirCategoria from "../exibirCategoria/ExibirCategoria.tsx";
-import {formatarCpfCnpj} from "../../../utils/formatters.tsx";
 
 interface ListarCategoriasProps {
     categoria: Categoria;
     aoDeletar?: (id: number) => void;
-    // aoExibir?: (id: number) => void;
 }
 
 function ListarCategorias({categoria, aoDeletar}: ListarCategoriasProps) {
@@ -31,12 +28,14 @@ function ListarCategorias({categoria, aoDeletar}: ListarCategoriasProps) {
 
                 <TableCell className="h-full align-middle">
                     <div className="flex gap-2 justify-center items-center h-full">
-                        <Button size="xs" color="light"
-                                onClick={() => {
-                                    setCategoriaSelecionada(categoria)
-                                    setOpenModalExibir(true)
-                                }}
-                                className="cursor-pointer focus:outline-none focus:ring-0 text-teal-600 dark:text-teal-400"
+                        <Button
+                            size="xs"
+                            color="light"
+                            className="cursor-pointer focus:outline-none focus:ring-0 text-teal-600 dark:text-teal-400"
+                            onClick={() => {
+                                setCategoriaSelecionada(categoria)
+                                setOpenModalExibir(true)
+                            }}
                         >
                             <HiEye className="h-4 w-4"/>
                             <span className="ml-1">Exibir</span>
@@ -54,12 +53,14 @@ function ListarCategorias({categoria, aoDeletar}: ListarCategoriasProps) {
                             </Button>
                         </Link>
 
-                        <Button size="xs" color="light"
-                                onClick={() => {
-                                    setCategoriaSelecionada(categoria);
-                                    setOpenModalExcluir(true);
-                                }}
-                                className='cursor-pointer focus:outline-none focus:ring-0 text-rose-600 dark:text-rose-400'
+                        <Button
+                            size="xs"
+                            color="light"
+                            className='cursor-pointer focus:outline-none focus:ring-0 text-rose-600 dark:text-rose-400'
+                            onClick={() => {
+                                setCategoriaSelecionada(categoria);
+                                setOpenModalExcluir(true);
+                            }}
                         >
                             <HiTrash className="h-4 w-4"/>
                             <span className="ml-1">Excluir</span>
@@ -73,10 +74,11 @@ function ListarCategorias({categoria, aoDeletar}: ListarCategoriasProps) {
                     isOpen={openModalExcluir}
                     onClose={() => setOpenModalExcluir(false)}
                     categoria={categoriaSelecionada}
-                    aoDeletar={aoDeletar} // ✅ repassa para o modal
+                    aoDeletar={aoDeletar}
 
                 />
             )}
+
             {categoriaSelecionada && (
                 <ExibirCategoria
                     isOpen={openModalExibir}

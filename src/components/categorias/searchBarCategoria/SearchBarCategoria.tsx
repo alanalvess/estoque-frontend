@@ -6,7 +6,6 @@ import {Button} from "flowbite-react";
 import {Toast, ToastAlerta} from "../../../utils/ToastAlerta.ts";
 import {FiSearch, FiX} from "react-icons/fi";
 import Categoria from "../../../models/Categoria.ts";
-import {Form} from "react-router-dom";
 
 interface SearchBarCategoriaProps {
     onSearch: (categorias: Categoria[], tipoBusca: 'nome' | 'todos') => void;
@@ -42,11 +41,9 @@ function SearchBarCategoria({onSearch, onClear}: SearchBarCategoriaProps) {
             await buscar(`/categorias/buscar/${encodeURIComponent(pesquisa)}`, setCategorias, authHeaders);
             onSearch(categorias, 'nome');
 
-
         } catch (error) {
             if (error.toString().includes('400')) {
-                // Se for erro 400, significa que não encontrou nenhumacategoria
-                onSearch([], 'nome'); // Manda lista vazia
+                onSearch([], 'nome');
             } else if (error.toString().includes('403')) {
                 ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
                 handleLogout();
@@ -65,8 +62,8 @@ function SearchBarCategoria({onSearch, onClear}: SearchBarCategoriaProps) {
     return (
         <form
             onSubmit={(e) => {
-                e.preventDefault(); // Impede o reload da página
-                handleSearch();     // Chama a função de busca
+                e.preventDefault();
+                handleSearch();
             }}
             className="mt-5 py-5"
         >
@@ -80,7 +77,6 @@ function SearchBarCategoria({onSearch, onClear}: SearchBarCategoriaProps) {
                     />
 
                     <button
-                        // onClick={handleSearch}
                         type="submit"
                         className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-azul-500"
                     >

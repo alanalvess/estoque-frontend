@@ -81,12 +81,9 @@ function Categorias() {
         }
 
         return order === 'asc'
-            ? a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' })
-            : b.nome.localeCompare(a.nome, 'pt', { sensitivity: 'base' });
+            ? a.nome.localeCompare(b.nome, 'pt', {sensitivity: 'base'})
+            : b.nome.localeCompare(a.nome, 'pt', {sensitivity: 'base'});
     });
-
-
-
 
     const handleSearch = (categorias: Categoria[], tipo: 'nome' | 'todos') => {
         setTipoBusca(tipo);
@@ -124,7 +121,7 @@ function Categorias() {
             </div>
 
             {isLoading ? (
-                <Spinner aria-label="Default status example" />
+                <Spinner aria-label="Default status example"/>
             ) : (
                 <Card className="p-0 overflow-x-auto">
                     <Table
@@ -140,7 +137,6 @@ function Categorias() {
                         <TableHead>
                             <TableRow>
                                 <TableHeadCell className="text-center">Nome</TableHeadCell>
-                                {/*<TableHeadCell>Ações</TableHeadCell>*/}
                                 <TableHeadCell className="text-center">Ações</TableHeadCell>
                             </TableRow>
 
