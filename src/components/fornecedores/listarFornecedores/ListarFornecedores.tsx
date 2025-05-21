@@ -1,10 +1,9 @@
-import {Button, Card, Modal, ModalBody, ModalFooter, ModalHeader, TableCell, TableRow} from 'flowbite-react';
+import {Button, TableCell, TableRow} from 'flowbite-react';
 import {Link} from 'react-router-dom'
 import Fornecedor from '../../../models/Fornecedor'
 import {HiPencilAlt, HiTrash} from "react-icons/hi";
 import {useState} from "react";
 import {HiEye} from "react-icons/hi2";
-import FornecedorImg from "../../../assets/images/fornecedor.png";
 import DeletarFornecedor from "../deletarFornecedor/DeletarFornecedor.tsx";
 import ExibirFornecedor from "../exibirFornecedor/ExibirFornecedor.tsx";
 import {formatarCpfCnpj} from "../../../utils/formatters.tsx";
@@ -12,7 +11,6 @@ import {formatarCpfCnpj} from "../../../utils/formatters.tsx";
 interface ListarFornecedoresProps {
     fornecedor: Fornecedor;
     aoDeletar?: (id: number) => void;
-    // aoExibir?: (id: number) => void;
 }
 
 function ListarFornecedores({fornecedor, aoDeletar}: ListarFornecedoresProps) {
@@ -82,6 +80,7 @@ function ListarFornecedores({fornecedor, aoDeletar}: ListarFornecedoresProps) {
 
                 />
             )}
+
             {fornecedorSelecionado && (
                 <ExibirFornecedor
                     isOpen={openModalExibir}

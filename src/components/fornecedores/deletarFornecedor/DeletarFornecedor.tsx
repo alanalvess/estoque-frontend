@@ -1,10 +1,9 @@
-import {useContext, useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router'
+import {useContext, useState} from 'react'
 import DeleteImg from "../../../assets/images/delete.png";
 
 import {AuthContext} from '../../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta'
-import {buscar, deletar} from '../../../services/Service'
+import {deletar} from '../../../services/Service'
 
 import Fornecedor from '../../../models/Fornecedor'
 import {Button, Card, Modal, ModalBody, ModalHeader, Spinner} from 'flowbite-react';
@@ -42,6 +41,7 @@ export function DeletarFornecedor({isOpen, onClose, fornecedor, aoDeletar}: Dele
     }
 
     return (
+
         <Modal show={isOpen} onClose={onClose} popup>
             <ModalHeader/>
             <ModalBody>
@@ -78,18 +78,13 @@ export function DeletarFornecedor({isOpen, onClose, fornecedor, aoDeletar}: Dele
                                 className="cursor-pointer text-white bg-rose-600 hover:bg-rose-800 w-24 dark:bg-rose-600 dark:hover:bg-rose-700 flex justify-center focus:outline-none focus:ring-0"
                                 onClick={deletarFornecedor}
                             >
-                                {isLoading ? (
-                                    <Spinner aria-label="Default status example" />
-                                ) : (
-                                    <span>Sim</span>
-                                )}
+                                {isLoading ? (<Spinner aria-label="Default status example"/>) : (<span>Sim</span>)}
                             </Button>
                         </div>
                     </div>
                 </Card>
             </ModalBody>
         </Modal>
-
     );
 }
 

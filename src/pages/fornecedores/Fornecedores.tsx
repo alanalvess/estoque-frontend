@@ -6,7 +6,12 @@ import {buscar} from '../../services/Service'
 import Fornecedor from '../../models/Fornecedor'
 
 import {
-    Button, Card, Dropdown, DropdownHeader, DropdownItem, Spinner,
+    Button,
+    Card,
+    Dropdown,
+    DropdownHeader,
+    DropdownItem,
+    Spinner,
     Table,
     TableBody,
     TableCell,
@@ -81,8 +86,8 @@ function Fornecedores() {
         }
 
         return order === 'asc'
-            ? a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' })
-            : b.nome.localeCompare(a.nome, 'pt', { sensitivity: 'base' });
+            ? a.nome.localeCompare(b.nome, 'pt', {sensitivity: 'base'})
+            : b.nome.localeCompare(a.nome, 'pt', {sensitivity: 'base'});
     });
 
     const handleSearch = (fornecedores: Fornecedor[], tipo: 'nome' | 'cnpj' | 'cpf' | 'todos') => {
@@ -122,7 +127,7 @@ function Fornecedores() {
                 </div>
 
                 {isLoading ? (
-                    <Spinner aria-label="Default status example" />
+                    <Spinner aria-label="Default status example"/>
                 ) : (
                     <Card className="p-0 overflow-x-auto">
                         <Table

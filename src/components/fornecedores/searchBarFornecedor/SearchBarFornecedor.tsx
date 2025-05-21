@@ -6,7 +6,6 @@ import {Button} from "flowbite-react";
 import {Toast, ToastAlerta} from "../../../utils/ToastAlerta.ts";
 import {FiSearch, FiX} from "react-icons/fi";
 import Fornecedor from "../../../models/Fornecedor.ts";
-import {Form} from "react-router-dom";
 
 interface SearchBarFornecedorProps {
     onSearch: (fornecedores: Fornecedor[], tipoBusca: 'nome' | 'cnpj' | 'cpf' | 'todos') => void;
@@ -69,11 +68,10 @@ function SearchBarFornecedor({onSearch, onClear}: SearchBarFornecedorProps) {
 
     }
 
-    return (
-        <form
+    return (<form
             onSubmit={(e) => {
-                e.preventDefault(); // Impede o reload da página
-                handleSearch();     // Chama a função de busca
+                e.preventDefault();
+                handleSearch();
             }}
             className="mt-5 py-5"
         >
@@ -91,7 +89,7 @@ function SearchBarFornecedor({onSearch, onClear}: SearchBarFornecedorProps) {
                         type="button"
                         className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-azul-500"
                     >
-                        <FiSearch size={22} />
+                        <FiSearch size={22}/>
                     </button>
                 </div>
 
@@ -100,7 +98,7 @@ function SearchBarFornecedor({onSearch, onClear}: SearchBarFornecedorProps) {
                     className="cursor-pointer h-10 flex items-center justify-center gap-2 px-3 rounded-md transition-all hover:text-rose-500 dark:hover:text-rose-500 focus:outline-none focus:ring-0"
                     color="alternative"
                 >
-                    <FiX size={22} />
+                    <FiX size={22}/>
                 </Button>
             </div>
         </form>

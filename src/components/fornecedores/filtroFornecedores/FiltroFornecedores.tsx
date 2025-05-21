@@ -1,6 +1,5 @@
 import Fornecedor from '../../../models/Fornecedor'
 
-
 interface FiltroFornecedoresProps {
     fornecedor: Fornecedor;
 }
