@@ -6,10 +6,12 @@ type Option = { value: string | number; label: string };
 type SelectFieldProps = {
     label: string;
     name: string;
-    value: string | number;
+    value: string | number | string[]; // <- Aceita múltiplos
     options: Option[];
     onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
     required?: boolean;
+    multiple?: boolean; // <- Novo
+
 };
 
 export default function SelectField({
@@ -19,13 +21,14 @@ export default function SelectField({
                                         options,
                                         onChange,
                                         required = false,
+                                        multiple = false,
                                     }: SelectFieldProps) {
     return (
         <div className='flex flex-col w-full'>
             <Label htmlFor={name}>{label}</Label>
             <Select
-                // className='border-2 border-slate-700 rounded p-2 focus:border-gray-500 focus:ring-1 focus:ring-gray-500'
                 name={name}
+                multiple={multiple}
                 value={value}
                 onChange={onChange}
                 required={required}
@@ -50,5 +53,5 @@ export default function SelectField({
                 ))}
             </Select>
         </div>
-    );
+    )
 }

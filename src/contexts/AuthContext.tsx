@@ -7,10 +7,12 @@ import UsuarioLogin from '../models/UsuarioLogin'
 
 interface AuthContextProps {
     usuario: UsuarioLogin;
-    handleLogout(): void;
-    handleLogin(usuario: UsuarioLogin): Promise<void>;
     isLoading: boolean;
     isHydrated: boolean;
+
+    handleLogout(): void;
+
+    handleLogin(usuario: UsuarioLogin): Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -23,7 +25,6 @@ export function AuthProvider({children}: AuthProviderProps) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isHydrated, setIsHydrated] = useState<boolean>(false);
-
 
     const [usuario, setUsuario] = useState<UsuarioLogin>({
         id: 0,
@@ -40,16 +41,20 @@ export function AuthProvider({children}: AuthProviderProps) {
         try {
             await login(`/usuarios/logar`, userLogin, (usuarioRetornado) => {
                 setUsuario(usuarioRetornado);
-                localStorage.setItem("usuario", JSON.stringify(usuarioRetornado)); // 🔸 Salva o usuário
+                localStorage.setItem("usuario", JSON.stringify(usuarioRetornado));
             });
             ToastAlerta('Seja bem-vindo!', Toast.Success);
         } catch (error: any) {
-            ToastAlerta('Usuário ou senha não encontrado', Toast.Warning);
+            if (error.response?.status === 401 || error.response?.status === 404) {
+                ToastAlerta('Usuário ou senha inválidos', Toast.Warning);
+            } else {
+                ToastAlerta('Erro inesperado ao tentar fazer login', Toast.Error);
+                console.error('Erro no login:', error);
+            }
         } finally {
             setIsLoading(false);
         }
     }
-
 
     function handleLogout() {
         setUsuario({
@@ -70,7 +75,6 @@ export function AuthProvider({children}: AuthProviderProps) {
         }
         setIsHydrated(true); // agora sabemos que carregou (com ou sem usuário)
     }, []);
-
 
     return (
         <AuthContext.Provider

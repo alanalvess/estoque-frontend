@@ -21,7 +21,6 @@ export function Calculadora({open, onClose}) {
         {value: 'lucro-com-venda', label: 'Valor de Venda (R$)'},
     ];
 
-
     let resultado = null;
 
     if (modo === 'lucro-com-venda' && !isNaN(custoNum) && !isNaN(vendaNum)) {
@@ -115,12 +114,15 @@ export function Calculadora({open, onClose}) {
                     )}
 
                     {resultado && (
-                        <div className="p-4 bg-gray-100 rounded-lg dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-lg">
+                        <div
+                            className="p-4 bg-gray-100 rounded-lg dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-lg">
                             {resultado}
                         </div>
                     )}
 
-                    <Button className='bg-rose-600 dark:bg-rose-600 hover:bg-rose-700 dark:hover:bg-rose-700 focus:outline-none focus:ring-0 cursor-pointer' onClick={onClose}>Fechar</Button>
+                    <Button
+                        className='bg-rose-600 dark:bg-rose-600 hover:bg-rose-700 dark:hover:bg-rose-700 focus:outline-none focus:ring-0 cursor-pointer'
+                        onClick={onClose}>Fechar</Button>
                 </div>
             </DrawerItems>
         </Drawer>

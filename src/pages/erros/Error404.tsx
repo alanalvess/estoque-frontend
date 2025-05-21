@@ -1,4 +1,4 @@
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {Button} from "flowbite-react";
 
 export default function Erro404() {
@@ -18,5 +18,5 @@ export default function Erro404() {
                 <span className='text-md '>Voltar para produtos</span>
             </Button>
         </div>
-    );
+    )
 }

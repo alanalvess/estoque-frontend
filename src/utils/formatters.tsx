@@ -2,13 +2,11 @@ export function formatarCpfCnpj(valor: string): string {
     const numeros = valor.replace(/\D/g, '').slice(0, 14);
 
     if (numeros.length <= 11) {
-        // CPF parcial
         return numeros
             .replace(/^(\d{3})(\d)/, '$1.$2')
             .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
             .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d*)/, '$1.$2.$3-$4');
     } else {
-        // CNPJ parcial
         return numeros
             .replace(/^(\d{2})(\d)/, '$1.$2')
             .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
@@ -18,10 +16,8 @@ export function formatarCpfCnpj(valor: string): string {
 }
 
 export function formatarTelefone(valor: string): string {
-    // Remove tudo que não for número e limita a 11 dígitos
     const numeros = valor.replace(/\D/g, '').slice(0, 11);
 
-    // Aplica a máscara (00) 0 0000-0000
     if (numeros.length <= 2) {
         return `(${numeros}`;
     } else if (numeros.length <= 3) {
@@ -39,4 +35,3 @@ export function formatarData(data: string | undefined): string {
     const [ano, mes, dia] = data.split('-');
     return `${dia}/${mes}/${ano}`;
 }
-

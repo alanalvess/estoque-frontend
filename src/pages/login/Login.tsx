@@ -1,5 +1,5 @@
 import {ChangeEvent, useContext, useEffect, useState} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 import {AuthContext} from '../../contexts/AuthContext'
 
@@ -69,21 +69,11 @@ function Login() {
                                 : <span>Entrar</span>
                             }
                         </Button>
-
-                        <hr className='border-gray-800 w-full'/>
-
-                        <p>
-                            Ainda não tem uma conta?{' '}
-                            <Link to='/cadastro'
-                                  className='text-teal-500 dark:text-teal-800 hover:underline hover:text-teal-600 dark:hover:text-teal-900'>
-                                Cadastre-se
-                            </Link>
-                        </p>
                     </form>
                 </div>
             </div>
         </>
-    );
+    )
 }
 
 export default Login;

@@ -34,12 +34,12 @@ function SearchBarFornecedor({onSearch, onClear}: SearchBarFornecedorProps) {
         const authHeaders = {headers: {Authorization: token}};
 
         try {
-            const isCPF = /^\d{11}$/.test(pesquisa.replace(/\D/g, '')); // Verifica CPF
-            const isCNPJ = /^\d{14}$/.test(pesquisa.replace(/\D/g, '')); // Verifica CNPJ
+            const isCPF = /^\d{11}$/.test(pesquisa.replace(/\D/g, ''));
+            const isCNPJ = /^\d{14}$/.test(pesquisa.replace(/\D/g, ''));
 
             const fornecedores: Fornecedor[] = [];
             const setFornecedores = (data: Fornecedor[]) => fornecedores.push(...data);
-            const doc = pesquisa.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+            const doc = pesquisa.replace(/\D/g, '');
 
             if (isCPF || isCNPJ) {
                 await buscar(`/fornecedores/buscar/cnpj/${encodeURIComponent(doc)}`, setFornecedores, authHeaders);

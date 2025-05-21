@@ -125,7 +125,6 @@ function Duvidas() {
                         </AccordionPanel>
                     </Accordion>
                 </div>
-
             </div>
         </>
     )
