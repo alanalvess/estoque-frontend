@@ -1,5 +1,5 @@
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 import {AuthContext} from '../../../contexts/AuthContext';
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta';
@@ -75,9 +75,11 @@ function FormularioMarca() {
     }
 
     function handleMarcaError(error: any) {
-        if (error.toString().includes('403')) {
+        if (error?.response?.status === 403) {
             ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
             handleLogout();
+        } else if (error?.response?.data?.message) {
+            ToastAlerta(error.response.data.message, Toast.Warning); // aqui a mensagem do backend
         } else {
             ToastAlerta('Erro ao cadastrar/atualizar a Marca', Toast.Error);
         }
@@ -140,11 +142,9 @@ function FormularioMarca() {
                     </h2>
 
                     <form
-                        // className="grid grid-cols-1 md:grid-cols-2 gap-6"
                         className='flex justify-center items-center mx-auto flex-col w-2/3 gap-3 py-10'
                         onSubmit={gerarNovaMarca}
                     >
-
                         <InputField
                             label='Nome da Marca'
                             name='nome'
@@ -159,10 +159,9 @@ function FormularioMarca() {
                             className='cursor-pointer rounded text-gray-100 bg-teal-500 hover:bg-teal-700 w-1/2 py-2 mx-auto flex justify-center dark:bg-teal-600 dark:hover:bg-teal-800 focus:ring-0'
                             type='submit'
                         >
-                            {estado.isLoading ?
-                                <Spinner aria-label="Default status example"/>
-                                :
-                                id !== undefined ? <span>Editar</span> : <span>Cadastrar</span>
+                            {estado.isLoading
+                                ? <Spinner aria-label="Default status example"/>
+                                : id !== undefined ? <span>Editar</span> : <span>Cadastrar</span>
                             }
                         </Button>
                     </form>

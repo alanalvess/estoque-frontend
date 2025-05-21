@@ -1,14 +1,12 @@
-import {useContext, useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router'
+import {useContext, useState} from 'react'
 
 import {AuthContext} from '../../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta'
-import {buscar, deletar} from '../../../services/Service'
+import {deletar} from '../../../services/Service'
 
 import Marca from '../../../models/Marca'
 import {Button, Card, Modal, ModalBody, ModalHeader, Spinner} from 'flowbite-react';
 import DeleteImg from "../../../assets/images/delete.png";
-import {formatarCpfCnpj, formatarTelefone} from "../../../utils/formatters.tsx";
 
 interface DeletarMarcaProps {
     isOpen: boolean;
@@ -17,7 +15,7 @@ interface DeletarMarcaProps {
     aoDeletar: (id: number) => void; // ✅ nova prop
 }
 
-function DeletarMarca({ isOpen, onClose, marca, aoDeletar }:  DeletarMarcaProps) {
+function DeletarMarca({isOpen, onClose, marca, aoDeletar}: DeletarMarcaProps) {
 
     const {usuario} = useContext(AuthContext);
     const token = usuario.token;
@@ -68,7 +66,7 @@ function DeletarMarca({ isOpen, onClose, marca, aoDeletar }:  DeletarMarcaProps)
                                 onClick={deletarMarca}
                             >
                                 {isLoading ? (
-                                    <Spinner aria-label="Default status example" />
+                                    <Spinner aria-label="Default status example"/>
                                 ) : (
                                     <span>Sim</span>
                                 )}

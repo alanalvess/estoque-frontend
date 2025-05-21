@@ -25,7 +25,7 @@ function SearchBarMarca({onSearch, onClear}: SearchBarMarcaProps) {
 
     async function handleSearch() {
         if (!query.trim()) {
-            onClear(); // Se query vazio, traz tudo
+            onClear();
             return;
         }
 
@@ -34,7 +34,6 @@ function SearchBarMarca({onSearch, onClear}: SearchBarMarcaProps) {
         const authHeaders = {headers: {Authorization: token}};
 
         try {
-
             const marcas: Marca[] = [];
             const setMarcas = (data: Marca[]) => marcas.push(...data);
 
@@ -43,7 +42,6 @@ function SearchBarMarca({onSearch, onClear}: SearchBarMarcaProps) {
 
         } catch (error) {
             if (error.toString().includes('400')) {
-                // Se for erro 400, significa que não encontrou nenhumamarca
                 onSearch([], 'nome'); // Manda lista vazia
             } else if (error.toString().includes('403')) {
                 ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
@@ -63,8 +61,8 @@ function SearchBarMarca({onSearch, onClear}: SearchBarMarcaProps) {
     return (
         <form
             onSubmit={(e) => {
-                e.preventDefault(); // Impede o reload da página
-                handleSearch();     // Chama a função de busca
+                e.preventDefault();
+                handleSearch();
             }}
             className="mt-5 py-5"
         >
@@ -78,7 +76,6 @@ function SearchBarMarca({onSearch, onClear}: SearchBarMarcaProps) {
                     />
 
                     <button
-                        // onClick={handleSearch}
                         type="submit"
                         className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-azul-500"
                     >

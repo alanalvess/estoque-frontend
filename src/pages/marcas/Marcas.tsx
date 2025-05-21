@@ -6,7 +6,12 @@ import {buscar} from '../../services/Service'
 import Marca from '../../models/Marca'
 
 import {
-    Button, Card, Dropdown, DropdownHeader, DropdownItem, Spinner,
+    Button,
+    Card,
+    Dropdown,
+    DropdownHeader,
+    DropdownItem,
+    Spinner,
     Table,
     TableBody,
     TableCell,
@@ -81,8 +86,8 @@ function Marcas() {
         }
 
         return order === 'asc'
-            ? a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' })
-            : b.nome.localeCompare(a.nome, 'pt', { sensitivity: 'base' });
+            ? a.nome.localeCompare(b.nome, 'pt', {sensitivity: 'base'})
+            : b.nome.localeCompare(a.nome, 'pt', {sensitivity: 'base'});
     });
 
     const handleSearch = (marcas: Marca[], tipo: 'nome' | 'todos') => {
@@ -121,7 +126,7 @@ function Marcas() {
             </div>
 
             {isLoading ? (
-                <Spinner aria-label="Default status example" />
+                <Spinner aria-label="Default status example"/>
             ) : (
                 <Card className="p-0 overflow-x-auto">
                     <Table
@@ -137,7 +142,6 @@ function Marcas() {
                         <TableHead>
                             <TableRow>
                                 <TableHeadCell className="text-center">Nome</TableHeadCell>
-                                {/*<TableHeadCell>Ações</TableHeadCell>*/}
                                 <TableHeadCell className="text-center">Ações</TableHeadCell>
                             </TableRow>
 

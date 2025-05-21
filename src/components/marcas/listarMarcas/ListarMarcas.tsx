@@ -1,18 +1,15 @@
-import {Button, Card, Modal, ModalBody, ModalFooter, ModalHeader, TableCell, TableRow} from 'flowbite-react';
+import {Button, TableCell, TableRow} from 'flowbite-react';
 import {Link} from 'react-router-dom'
 import Marca from '../../../models/Marca'
 import {HiPencilAlt, HiTrash} from "react-icons/hi";
 import {useState} from "react";
 import {HiEye} from "react-icons/hi2";
-import MarcaImg from "../../../assets/images/marca.png";
 import DeletarMarca from "../deletarMarca/DeletarMarca.tsx";
 import ExibirMarca from "../exibirMarca/ExibirMarca.tsx";
-import {formatarCpfCnpj} from "../../../utils/formatters.tsx";
 
 interface ListarMarcasProps {
     marca: Marca;
     aoDeletar?: (id: number) => void;
-    // aoExibir?: (id: number) => void;
 }
 
 function ListarMarcas({marca, aoDeletar}: ListarMarcasProps) {
@@ -73,10 +70,11 @@ function ListarMarcas({marca, aoDeletar}: ListarMarcasProps) {
                     isOpen={openModalExcluir}
                     onClose={() => setOpenModalExcluir(false)}
                     marca={marcaSelecionada}
-                    aoDeletar={aoDeletar} // ✅ repassa para o modal
+                    aoDeletar={aoDeletar}
 
                 />
             )}
+
             {marcaSelecionada && (
                 <ExibirMarca
                     isOpen={openModalExibir}
