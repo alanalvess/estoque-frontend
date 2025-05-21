@@ -7,16 +7,16 @@ import {atualizar, buscar, cadastrar} from '../../../services/Service'
 
 import Categoria from '../../../models/Categoria'
 import Produto from '../../../models/Produto'
-import {Button, Spinner, ToggleSwitch} from 'flowbite-react'
+import {Button, Spinner} from 'flowbite-react'
 import Fornecedor from '../../../models/Fornecedor.ts';
 import InputField from '../../form/InputField.tsx';
 import TextAreaField from '../../form/TextInputField.tsx';
 import SelectField from '../../form/SelectField.tsx';
-import {UnidadeDeMedida} from '../../../utils/UnidadeDeMedida.ts';
 import {HiChevronLeft} from "react-icons/hi2";
 import DatePickerField from "../../form/DatePickerField.tsx";
 import ToggleSwitchField from "../../form/ToggleSwitchField.tsx";
 import Marca from "../../../models/Marca.ts";
+import {UnidadeDeMedida} from "../../../utils/UnidadeDeMedida.ts";
 
 'use client';
 
@@ -145,7 +145,6 @@ function FormularioProduto() {
         }));
     }
 
-
     function handleCheckboxChange(checked: boolean) {
         setEstado(prev => ({
             ...prev,
@@ -238,13 +237,12 @@ function FormularioProduto() {
         return true;
     }
 
-
     return (
         <>
             <div className="py-30 px-4  min-h-screen">
                 <div className="max-w-4xl mx-auto  rounded-2xl shadow-xl p-10">
                     <Button
-                        onClick={voltarFormulario} // volta uma página no histórico
+                        onClick={voltarFormulario}
                         color='light'
                         className="cursor-pointer border-none flex items-center text-sm text-gray-600 dark:text-gray-300 hover:underline hover:text-gray-800 dark:hover:text-white dark:bg-gray-500 dark:hover:bg-gray-600 transition-all"
                     >
@@ -314,8 +312,7 @@ function FormularioProduto() {
                             label="Data de Entrada"
                             name="dataEntrada"
                             value={estado.produto.dataEntrada}
-                            // onChange={atualizarCampo}
-                            onChange={() => {}} // impede qualquer alteração
+                            onChange={() => {}}
                             required
                             disabled
 
@@ -324,10 +321,9 @@ function FormularioProduto() {
                         <DatePickerField
                             label="Validade"
                             name="dataValidade"
-                            // title='Data de Validade'
                             value={estado.produto.dataValidade}
                             onChange={atualizarCampo}
-                            minDate={new Date()}  // Aqui você usa a data no formato local
+                            minDate={new Date()}
                             required
                         />
 
@@ -351,7 +347,7 @@ function FormularioProduto() {
                             label="Categoria do Produto"
                             name="categoria"
                             value={estado.produto.categoria?.id || ''}
-                            options={estado.categorias.map((cat) => ({ value: cat.id, label: cat.nome }))}
+                            options={estado.categorias.map((categoria) => ({ value: categoria.id, label: categoria.nome }))}
                             onChange={(e) => buscar(`/categorias/${e.currentTarget.value}`, (data) => setEstado(prev => ({ ...prev, categoria: data })), authHeaders)}
                             required
                         />
@@ -360,7 +356,7 @@ function FormularioProduto() {
                             label="Fornecedor do Produto"
                             name="fornecedor"
                             value={estado.produto.fornecedor?.id || ''}
-                            options={estado.fornecedores.map((forn) => ({ value: forn.id, label: forn.nome }))}
+                            options={estado.fornecedores.map((fornecedor) => ({ value: fornecedor.id, label: fornecedor.nome }))}
                             onChange={(e) => buscar(`/fornecedores/${e.currentTarget.value}`, (data) => setEstado(prev => ({ ...prev, fornecedor: data })), authHeaders)}
                             required
                         />

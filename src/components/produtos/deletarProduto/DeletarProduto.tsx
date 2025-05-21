@@ -1,9 +1,8 @@
-import {useContext, useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router'
+import {useContext, useState} from 'react'
 
 import {AuthContext} from '../../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta'
-import {buscar, deletar} from '../../../services/Service'
+import {deletar} from '../../../services/Service'
 
 import Produto from '../../../models/Produto'
 import {Button, Card, Modal, ModalBody, ModalHeader, Spinner} from 'flowbite-react';
@@ -13,10 +12,10 @@ interface DeletarProdutoProps {
     isOpen: boolean;
     onClose: () => void;
     produto: Produto;
-    aoDeletar: (id: number) => void; // ✅ nova prop
+    aoDeletar: (id: number) => void;
 }
 
-function DeletarProduto({ isOpen, onClose, produto, aoDeletar }:  DeletarProdutoProps) {
+function DeletarProduto({isOpen, onClose, produto, aoDeletar}: DeletarProdutoProps) {
 
     const {usuario} = useContext(AuthContext);
     const token = usuario.token;
@@ -68,7 +67,7 @@ function DeletarProduto({ isOpen, onClose, produto, aoDeletar }:  DeletarProduto
                             >
                                 {isLoading ? (
 
-                                    <Spinner aria-label="Default status example" />
+                                    <Spinner aria-label="Default status example"/>
                                 ) : (
                                     <span>Sim</span>
                                 )}

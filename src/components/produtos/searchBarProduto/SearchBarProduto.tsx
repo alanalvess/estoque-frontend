@@ -3,7 +3,7 @@ import {useContext, useState} from "react";
 import {AuthContext} from "../../../contexts/AuthContext.tsx";
 import {buscar} from "../../../services/Service.ts";
 import InputField from "../../form/InputField.tsx";
-import {Button, Label, TextInput} from "flowbite-react";
+import {Button} from "flowbite-react";
 import {Toast, ToastAlerta} from "../../../utils/ToastAlerta.ts";
 import {FiSearch, FiX} from "react-icons/fi";
 
@@ -30,7 +30,7 @@ function SearchBarProduto({onSearch, onClear}: SearchBarProdutoProps) {
         }
 
         const pesquisa = query.trim();
-        const isCodigo = /^\d+$/.test(pesquisa); // Só dígitos → código do produto
+        const isCodigo = /^\d+$/.test(pesquisa);
 
 
         const authHeaders = {headers: {Authorization: token}};
@@ -68,8 +68,8 @@ function SearchBarProduto({onSearch, onClear}: SearchBarProdutoProps) {
     return (
         <form
             onSubmit={(e) => {
-                e.preventDefault(); // Impede o reload da página
-                handleSearch();     // Chama a função de busca
+                e.preventDefault();
+                handleSearch();
             }}
             className="mt-5 py-5"
         >

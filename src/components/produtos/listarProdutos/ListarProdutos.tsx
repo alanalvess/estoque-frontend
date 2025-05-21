@@ -1,18 +1,16 @@
-import {Button, Card, Modal, ModalBody, ModalFooter, ModalHeader, TableCell, TableRow} from 'flowbite-react';
+import {Button, TableCell, TableRow} from 'flowbite-react';
 import {Link} from 'react-router-dom'
 import Produto from '../../../models/Produto'
 import {HiPencilAlt, HiTrash} from "react-icons/hi";
 import {useState} from "react";
 import {HiEye} from "react-icons/hi2";
-import ProdutoImg from "../../../assets/images/produto.png";
 import DeletarProduto from "../deletarProduto/DeletarProduto.tsx";
 import ExibirProduto from "../exibirProduto/ExibirProduto.tsx";
-import {formatarCpfCnpj, formatarData} from "../../../utils/formatters.tsx";
+import {formatarData} from "../../../utils/formatters.tsx";
 
 interface ListarProdutosProps {
     produto: Produto;
     aoDeletar?: (id: number) => void;
-    // aoExibir?: (id: number) => void;
 }
 
 function ListarProdutos({produto, aoDeletar}: ListarProdutosProps) {
@@ -33,9 +31,9 @@ function ListarProdutos({produto, aoDeletar}: ListarProdutosProps) {
         const diffMs = validade.getTime() - hoje.getTime();
         const diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-        if (diffDias < 0) return 'text-red-600 font-semibold';        // Vencido
-        if (diffDias <= 10) return 'text-yellow-400 font-semibold';   // Próximo do vencimento
-        return 'text-green-700 font-semibold';                        // Válido
+        if (diffDias < 0) return 'text-red-600 font-semibold';
+        if (diffDias <= 10) return 'text-yellow-400 font-semibold';
+        return 'text-green-700 font-semibold';
     }
 
     return (
@@ -78,12 +76,14 @@ function ListarProdutos({produto, aoDeletar}: ListarProdutosProps) {
                     className="w-40 break-words mx-auto">
                     {produto.disponivel ? (
                         produto.quantidade < produto.estoqueMinimo ? (
-                            <span className='px-2 py-1 rounded text-black bg-yellow-400 font-semibold'>DISPONÍVEL</span>
+                            <span
+                                className='px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-semibold'>DISPONÍVEL</span>
                         ) : (
-                            <span className='px-2 py-1 rounded text-white bg-green-600 font-semibold'>DISPONÍVEL</span>
+                            <span
+                                className='px-2 py-1 rounded bg-green-100 text-green-800 font-semibold'>DISPONÍVEL</span>
                         )
                     ) : (
-                        <span className='px-2 py-1 rounded text-white bg-red-600 font-semibold'>INDISPONÍVEL</span>
+                        <span className='px-2 py-1 rounded bg-red-100 text-red-800 font-semibold'>INDISPONÍVEL</span>
                     )}
                 </TableCell>
 
@@ -131,10 +131,11 @@ function ListarProdutos({produto, aoDeletar}: ListarProdutosProps) {
                     isOpen={openModalExcluir}
                     onClose={() => setOpenModalExcluir(false)}
                     produto={produtoSelecionado}
-                    aoDeletar={aoDeletar} // ✅ repassa para o modal
+                    aoDeletar={aoDeletar}
 
                 />
             )}
+
             {produtoSelecionado && (
                 <ExibirProduto
                     isOpen={openModalExibir}

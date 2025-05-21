@@ -1,27 +1,7 @@
 import Categoria from './Categoria';
 import Fornecedor from './Fornecedor.ts';
 import Marca from "./Marca.ts";
-
-export enum UnidadeMedida {
-    UNIDADE = 'UNIDADE',
-    DUZIA = 'DUZIA',
-    QUILOGRAMA = 'QUILOGRAMA',
-    GRAMA = 'GRAMA',
-    MILIGRAMA = 'MILIGRAMA',
-    LITRO = 'LITRO',
-    MILILITRO = 'MILILITRO',
-    PACOTE = 'PACOTE',
-    CAIXA = 'CAIXA',
-    FRASCO = 'FRASCO',
-    GARRAFA = 'GARRAFA',
-    LATA = 'LATA',
-    SACHE = 'SACHE',
-    ROLO = 'ROLO',
-    PAR = 'PAR',
-    KIT = 'KIT',
-    FARDO = 'FARDO',
-    OUTROS = 'OUTROS'
-}
+import {UnidadesDeMedidas} from "../enums/UnidadesDeMedidas.ts";
 
 export default interface Produto {
     id: number;
@@ -31,7 +11,7 @@ export default interface Produto {
     quantidade: number;
     disponivel: boolean;
 
-    unidadeMedida: UnidadeMedida | null;
+    unidadeMedida: UnidadesDeMedidas | null;
     codigo: string;
     estoqueMinimo: number;
     estoqueMaximo: number;

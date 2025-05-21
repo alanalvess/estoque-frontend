@@ -1,9 +1,6 @@
 import {Card, Modal, ModalBody, ModalHeader} from 'flowbite-react';
 import Produto from '../../../models/Produto'
 import ProdutoImg from "../../../assets/images/produto.png";
-import {XCircle} from "@phosphor-icons/react";
-import {FiAlertTriangle} from "react-icons/fi";
-import {HiBadgeCheck} from "react-icons/hi";
 import {AiOutlineCheckCircle, AiOutlineCloseCircle, AiOutlineExclamationCircle} from "react-icons/ai";
 import {formatarData} from "../../../utils/formatters.tsx";
 
@@ -77,12 +74,9 @@ function ExibirProduto({isOpen, onClose, produto}: ExibirProdutoProps) {
                             </div>
                         </div>
                     </Card>
-
-
                 </ModalBody>
             </Modal>
         </>
-
     );
 }
 

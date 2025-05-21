@@ -1,4 +1,4 @@
-import {JSX, useContext, useEffect, useMemo, useState} from 'react'
+import {useContext, useEffect, useMemo, useState} from 'react'
 
 import {AuthContext} from '../../contexts/AuthContext'
 import {Toast, ToastAlerta} from '../../utils/ToastAlerta'
@@ -12,7 +12,11 @@ import {
     Card,
     Drawer,
     DrawerHeader,
-    DrawerItems, Dropdown, DropdownHeader, DropdownItem, Spinner,
+    DrawerItems,
+    Dropdown,
+    DropdownHeader,
+    DropdownItem,
+    Spinner,
     Table,
     TableBody,
     TableCell,
@@ -24,7 +28,6 @@ import {Link, useNavigate} from 'react-router-dom'
 import Fornecedor from '../../models/Fornecedor.ts';
 import FiltroCategorias from '../../components/categorias/filtroCategorias/FiltroCategorias.tsx';
 import FiltroFornecedores from '../../components/fornecedores/filtroFornecedores/FiltroFornecedores.tsx';
-import {HiChevronDoubleRight, HiChevronLeft} from "react-icons/hi2";
 import SearchBarProduto from "../../components/produtos/searchBarProduto/SearchBarProduto.tsx";
 import FiltroMarcas from "../../components/marcas/filtroMarcas/FiltroMarcas.tsx";
 import FiltroList from "../../components/filtroList/FiltroList.tsx";
@@ -210,7 +213,6 @@ function Produtos() {
                         renderItem={fornecedor => <FiltroFornecedores fornecedor={fornecedor}/>}
                     />
 
-
                 </DrawerItems>
             </Drawer>
 
@@ -266,10 +268,6 @@ function Produtos() {
                                     <TableHeadCell className="text-center">Data de Entrada</TableHeadCell>
                                     <TableHeadCell className="text-center">Data de Validade</TableHeadCell>
                                     <TableHeadCell className="text-center">Status</TableHeadCell>
-                                    {/*<TableHeadCell>Marca</TableHeadCell>*/}
-                                    {/*<TableHeadCell>Categoria</TableHeadCell>*/}
-                                    {/*<TableHeadCell>Fornecedor</TableHeadCell>*/}
-                                    {/*<TableHeadCell>Observações</TableHeadCell>*/}
                                     <TableHeadCell className="text-center">Ações</TableHeadCell>
                                 </TableRow>
                             </TableHead>
