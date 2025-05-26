@@ -32,6 +32,7 @@ import SearchBarProduto from "../../components/produtos/searchBarProduto/SearchB
 import FiltroMarcas from "../../components/marcas/filtroMarcas/FiltroMarcas.tsx";
 import FiltroList from "../../components/filtroList/FiltroList.tsx";
 import {HiChevronDown, HiChevronRight} from "react-icons/hi";
+import Marca from "../../models/Marca.ts";
 
 "use client";
 
@@ -85,7 +86,7 @@ function Produtos() {
 
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [marcas, setMarcas] = useState<Categoria[]>([]);
+    const [marcas, setMarcas] = useState<Marca[]>([]);
     const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
 
     const filtroCategorias = useFiltro(categorias);
