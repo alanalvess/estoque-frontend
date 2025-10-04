@@ -6,7 +6,7 @@ export default function Erro500() {
     const navigate = useNavigate();
 
     function retornar() {
-        navigate('/produtos/all');
+        navigate('/');
     }
 
     return (
@@ -16,7 +16,7 @@ export default function Erro500() {
             <p className='text-gray-600 dark:text-gray-300 mt-2 mb-10'>Algo deu errado. Tente novamente mais tarde.</p>
 
             <Button onClick={retornar} color='alternative' className='cursor-pointer hover:text-teal-700'>
-                <span className='text-md '>Voltar para produtos</span>
+                <span className='text-md '>Voltar ao Início</span>
             </Button>
         </div>
     )

@@ -1,5 +1,4 @@
 import {Button, TableCell, TableRow} from 'flowbite-react';
-import Usuario from '../../../models/Usuario.ts'
 import {useState} from "react";
 import {HiPencilAlt, HiTrash} from "react-icons/hi";
 import {HiEye} from "react-icons/hi2";
@@ -7,6 +6,7 @@ import {Link} from "react-router-dom";
 
 import DeletarUsuario from "../deletarUsuario/DeletarUsuario.tsx";
 import ExibirUsuario from "../exibirUsuario/ExibirUsuario.tsx";
+import type {Usuario} from "../../../models";
 
 interface ListarUsuariosProps {
     listando: Usuario;

@@ -23,9 +23,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import SearchBarUsuario from "../../components/usuarios/searchBarUsuario/SearchBarUsuario.tsx";
 import {HiChevronDown} from "react-icons/hi";
 import ListarUsuarios from "../../components/usuarios/listarUsuarios/ListarUsuarios.tsx";
-import Usuario from "../../models/Usuario.ts";
-
-"use client";
+import type {Usuario} from "../../models"
 
 function Usuarios() {
 

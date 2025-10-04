@@ -1,9 +1,8 @@
-import {createContext, ReactNode, useEffect, useState} from 'react'
+import {createContext, type ReactNode, useEffect, useState} from 'react'
 
 import {Toast, ToastAlerta} from '../utils/ToastAlerta'
 import {login} from '../services/Service'
-
-import UsuarioLogin from '../models/UsuarioLogin'
+import type {UsuarioLogin} from "../models";
 
 interface AuthContextProps {
     usuario: UsuarioLogin;
@@ -44,7 +43,7 @@ export function AuthProvider({children}: AuthProviderProps) {
                 localStorage.setItem("usuario", JSON.stringify(usuarioRetornado));
             });
             ToastAlerta('Seja bem-vindo!', Toast.Success);
-        } catch (error: any) {
+        } catch (error) {
             if (error.response?.status === 401 || error.response?.status === 404) {
                 ToastAlerta('Usuário ou senha inválidos', Toast.Warning);
             } else {
@@ -65,7 +64,7 @@ export function AuthProvider({children}: AuthProviderProps) {
             token: '',
             roles: []
         });
-        localStorage.removeItem("usuario"); // 🔸 Remove ao sair
+        localStorage.removeItem("usuario");
     }
 
     useEffect(() => {

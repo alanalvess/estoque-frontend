@@ -1,4 +1,4 @@
-import {ChangeEvent} from 'react';
+import type {ChangeEvent} from 'react';
 import {Label, Textarea} from "flowbite-react";
 
 type TextAreaProps = {

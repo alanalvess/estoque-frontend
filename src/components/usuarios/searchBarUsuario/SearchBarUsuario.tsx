@@ -5,7 +5,7 @@ import InputField from "../../form/InputField.tsx";
 import {Button} from "flowbite-react";
 import {Toast, ToastAlerta} from "../../../utils/ToastAlerta.ts";
 import {FiSearch, FiX} from "react-icons/fi";
-import Usuario from "../../../models/Usuario.ts";
+import type {Usuario} from "../../../models"
 
 interface SearchBarUsuarioProps {
     onSearch: (usuarios: Usuario[], tipoBusca: 'nome' | 'todos') => void;

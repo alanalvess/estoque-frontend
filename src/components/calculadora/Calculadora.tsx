@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Drawer, Button, DrawerHeader, DrawerItems, Label, TextInput, Select} from 'flowbite-react';
+import {Drawer, Button, DrawerHeader, DrawerItems} from 'flowbite-react';
 import InputField from "../form/InputField.tsx";
 import SelectField from "../form/SelectField.tsx";
 

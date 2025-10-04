@@ -1,6 +1,4 @@
-import Usuario from '../../../models/Usuario'
-
-'use client';
+import type {Usuario} from "../../../models";
 
 interface FiltroUsuariosProps {
     filtrando: Usuario;

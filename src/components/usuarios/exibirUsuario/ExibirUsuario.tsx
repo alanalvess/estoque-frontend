@@ -1,6 +1,6 @@
 import {Card, Modal, ModalBody, ModalHeader} from 'flowbite-react';
-import Usuario from '../../../models/Usuario.ts'
 import UsuarioImg from "../../../assets/images/user.png";
+import type {Usuario} from "../../../models"
 
 interface ExibirUsuarioProps {
     isOpen: boolean;

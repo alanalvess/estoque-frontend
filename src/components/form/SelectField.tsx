@@ -1,4 +1,4 @@
-import {ChangeEvent} from 'react';
+import type {ChangeEvent} from 'react';
 import {Label, Select} from "flowbite-react";
 
 type Option = { value: string | number; label: string };

@@ -1,11 +1,11 @@
-import {ChangeEvent, useContext, useEffect, useState} from 'react'
+import {type ChangeEvent, useContext, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 
 import {AuthContext} from '../../contexts/AuthContext'
 
-import UsuarioLogin from '../../models/UsuarioLogin'
 import {Button, Spinner} from 'flowbite-react';
 import InputField from '../../components/form/InputField.tsx';
+import type {UsuarioLogin} from "../../models";
 
 function Login() {
 
@@ -29,7 +29,7 @@ function Login() {
 
     useEffect(() => {
         if (usuario.token !== '') {
-            navigate('/produtos/all');
+            navigate('/');
         }
     }, [usuario]);
 

@@ -9,17 +9,14 @@ export default function Home() {
             <div
                 className="flex-1 flex flex-col items-center text-center space-y-6 max-w-xl mb-10 p-4 sm:p-10 lg:p-20 bg-gray-300 dark:bg-gray-600 shadow-2xl rounded-2xl ">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-teal-500 dark:text-rose-500">
-                    Gestok: Sistema de gestão de estoque!
+                    Dia A+: Sistema de gestão de presença e notas dos alunos!
                 </h1>
                 <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 px-4 md:px-0">
-                    Você tem o controle completo do seu estoque na palma da mão. Desenvolvido
-                    especialmente para mercados de pequeno porte, o sistema permite cadastrar, acompanhar entradas e
-                    saídas, monitorar validades e garantir que seus produtos estejam sempre disponíveis para seus
-                    clientes.
+                    Sistema para controle de presença e notas de alunos, além de fornecer alertas e relatórios para professores e gestores da escola.
                 </p>
 
                 <div className="flex justify-center md:justify-start">
-                    <Link to="/produtos/all">
+                    <Link to="/dashboard">
                         <Button
                             className="px-6 py-3 text-lg rounded-lg shadow-lg bg-rose-600 hover:bg-rose-700 dark:bg-teal-600 dark:hover:bg-teal-700 focus:ring-0 cursor-pointer">
                             Acessar Sistema

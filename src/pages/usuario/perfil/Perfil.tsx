@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from 'react';
 import {Link, useParams} from "react-router-dom";
-import {Avatar, Button, Card, Spinner} from 'flowbite-react';
+import {Avatar, Card, Spinner} from 'flowbite-react';
 
 import {AuthContext} from '../../../contexts/AuthContext';
 import {Toast, ToastAlerta} from '../../../utils/ToastAlerta';
 
-import Usuario from "../../../models/Usuario.ts";
+import type {Usuario} from "../../../models"
 import {buscar} from "../../../services/Service.ts";
 import UserImg from "../../../assets/images/user.png"
 
@@ -23,7 +23,7 @@ export default function Perfil() {
         try {
             setIsLoading(true);
             await buscar(`/usuarios/${id}`, setUsuarios, {headers: {Authorization: token}});
-        } catch (error: any) {
+        } catch (error) {
             if (error.toString().includes('403')) {
                 ToastAlerta('O token expirou, favor logar novamente', Toast.Error);
                 handleLogout();

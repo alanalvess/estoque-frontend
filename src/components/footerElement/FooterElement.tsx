@@ -21,6 +21,7 @@ function FooterElement() {
                     <FooterLinkGroup className="flex flex-col sm:flex-row gap-2 sm:gap-6">
                         <Link to='/duvidas'>Dúvidas</Link>
                         <Link to='/sobre'>Sobre</Link>
+                        <Link to='/cadastro'>Cadastrar Usuário</Link>
                     </FooterLinkGroup>
 
                     <div className='flex items-center bg-gray-500 hover:bg-gray-600 dark:bg-gray-900 dark:hover:bg-gray-700 rounded-lg p-1'>
@@ -37,8 +38,8 @@ function FooterElement() {
 
                 <div className="flex justify-center w-full">
                     <FooterCopyright
-                        href='/produtos/all'
-                        by='Gestok™'
+                        href='/'
+                        by='Dia A+™'
                         year={2025}
                     />
                 </div>

@@ -1,12 +1,12 @@
-import {ChangeEvent, useContext, useEffect, useState} from "react";
+import {type ChangeEvent, useContext, useEffect, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {Button, Spinner} from "flowbite-react";
 
 import {AuthContext} from "../../../contexts/AuthContext";
 import {atualizar, buscar} from "../../../services/Service";
 import {Toast, ToastAlerta} from "../../../utils/ToastAlerta";
+import type {Usuario} from "../../../models"
 
-import Usuario from "../../../models/Usuario";
 import InputField from "../../../components/form/InputField.tsx";
 
 function EditarUsuario() {
@@ -45,7 +45,7 @@ function EditarUsuario() {
                 ToastAlerta('Usuario atualizado com sucesso', Toast.Success);
                 retornar();
 
-            } catch (error: any) {
+            } catch (error) {
                 if (error.toString().includes("403")) {
                     ToastAlerta('O token expirou, favor logar novamente', Toast.Info);
                     handleLogout();

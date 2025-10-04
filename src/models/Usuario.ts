@@ -1,6 +1,6 @@
 import {Roles} from "../enums/Roles.ts";
 
-export default interface Usuario {
+export interface Usuario {
     id: number;
     nome: string;
     email: string;

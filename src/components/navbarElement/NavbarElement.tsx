@@ -1,116 +1,145 @@
 import {useContext} from 'react'
-import {Link, useLocation, useNavigate} from 'react-router-dom'
-import {SignIn} from '@phosphor-icons/react'
+import {Link} from 'react-router-dom'
+import {PiSignInDuotone} from "react-icons/pi"
 
 import {AuthContext} from '../../contexts/AuthContext'
-import {Toast, ToastAlerta} from '../../utils/ToastAlerta'
 
-import Logo from '../../assets/images/gestok.png'
+import Logo from '../../assets/images/dia.png'
 
-import {Button, DarkThemeToggle, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle} from 'flowbite-react'
+import {
+  Badge,
+  Button,
+  DarkThemeToggle,
+  Navbar,
+  NavbarBrand,
+  NavbarCollapse,
+  NavbarLink,
+  NavbarToggle
+} from 'flowbite-react'
 import DropdownPerfil from "./dropdownPerfil/DropdownPerfil.tsx";
+import {Roles} from "../../enums/Roles.ts";
+import {FaBell, FaBook, FaChartBar, FaClipboardList, FaGraduationCap, FaUsers} from "react-icons/fa";
 
 function NavbarElement() {
 
-    let navbarComponent;
+  let navbarComponent;
+  let notificationsCount;
 
-    const navigate = useNavigate();
+  const {usuario} = useContext(AuthContext);
 
-    const {usuario, handleLogout} = useContext(AuthContext);
+  const renderMenuLinks = () => {
+    if (!usuario?.roles) return null;
 
-    const location = useLocation();
-
-    const links = [
-        {to: '/produtos/all', label: 'Produtos'},
-        {to: '/categorias/all', label: 'Categorias'},
-        {to: '/fornecedores/all', label: 'Fornecedores'},
-        {to: '/marcas/all', label: 'Marcas'},
-    ]
-
-    function logout() {
-        handleLogout();
-        ToastAlerta('Usuário deslogado', Toast.Success);
-        navigate('/home');
-    }
-
-    if (usuario.token !== '') {
-        navbarComponent = (
-            <>
-                <Navbar fluid className='bg-gray-800 fixed top-0 py-3 z-40 w-full justify-between'>
-                    <NavbarBrand>
-                        <Link to='/home' className='text-2xl font-bold uppercase'>
-                            <div className='flex items-center justify-center gap-3'>
-                                <img src={Logo} alt='Gestok' className='max-w-30 ml-2 my-3 h-10'/>
-                            </div>
-                        </Link>
-                    </NavbarBrand>
-
-                    <div className="flex md:order-2">
-
-                        <DropdownPerfil/>
-
-                        <DarkThemeToggle
-                            className='cursor-pointer mx-4 hover:bg-gray-700 focus:outline-none focus:ring-0'/>
-                        <NavbarToggle className='focus:outline-none focus:ring-0'/>
-                    </div>
-
-                    <NavbarCollapse>
-                        {links.map(link => (
-                            <Link key={link.to} to={link.to}>
-                                <NavbarLink
-                                    active={location.pathname === link.to}
-                                    className='text-gray-400'
-                                    theme={{
-                                        active: {
-                                            on: "text-xl border-b-2 border-teal-600 font-bold bg-teal-700 text-white md:bg-transparent md:text-white dark:text-white",
-                                            off: "text-xl border-b border-gray-100 text-gray-700 hover:bg-gray-50 md:border-0 md:hover:bg-transparent md:hover:text-white dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
-                                        }
-                                    }}
-                                >
-                                    {link.label}
-                                </NavbarLink>
-                            </Link>
-                        ))}
-                    </NavbarCollapse>
-                </Navbar>
-            </>
-        );
-
-    } else {
-        navbarComponent = (
-            <>
-                <Navbar fluid className='bg-gray-800 fixed top-0 z-40 w-full '>
-                    <NavbarBrand>
-                        <Link to='/home' className='text-2xl font-bold uppercase'>
-                            <div className='flex items-center justify-center gap-3'>
-                                <img src={Logo} alt='Gestok' className='max-w-30 '/>
-                            </div>
-                        </Link>
-                    </NavbarBrand>
-
-                    <div className="flex md:order-2">
-                        <Link to='/login' className='flex items-center justify-center'>
-                            <Button
-                                className='bg-rose-600 hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-700 focus:outline-none focus:ring-0 cursor-pointer'>
-                                <span className='text-xl '>Entrar</span>
-                                <SignIn className='p-1 rounded-lg ' size={40} weight='fill'/>
-                            </Button>
-                        </Link>
-
-                        <DarkThemeToggle
-                            className='cursor-pointer mx-4 hover:bg-gray-700 focus:outline-none focus:ring-0'
-                        />
-                    </div>
-                </Navbar>
-            </>
-        )
-    }
-
-    return (
+    if (usuario.roles.includes(Roles.PROFESSOR)) {
+      return (
         <>
-            {navbarComponent}
+          <NavbarLink href="/dashboardProfessor"><FaGraduationCap className="inline mr-1"/> Dashboard</NavbarLink>
+          <NavbarLink href="/presenca"><FaClipboardList className="inline mr-1"/> Presença / QR</NavbarLink>
+          <NavbarLink href="/notas"><FaClipboardList className="inline mr-1"/> Notas</NavbarLink>
+          <NavbarLink href="/observacoes"><FaClipboardList className="inline mr-1"/> Observações</NavbarLink>
+          <NavbarLink href="/avaliacoes"><FaClipboardList className="inline mr-1"/> Avaliações</NavbarLink>
         </>
+      )
+    }
+
+    if (usuario.roles.includes(Roles.COORDENADOR)) {
+      return (
+        <>
+          <div className="flex flex-col gap-4 text-center">
+            <div className="flex gap-10 text-center">
+              <NavbarLink href="/alunos"><FaGraduationCap className="inline mr-1"/> Alunos</NavbarLink>
+              <NavbarLink href="/professores"><FaUsers className="inline mr-1"/> Professores</NavbarLink>
+              <NavbarLink href="/turmas"><FaUsers className="inline mr-1"/> Turmas</NavbarLink>
+              <NavbarLink href="/disciplinas"><FaBook className="inline mr-1"/> Disciplinas</NavbarLink>
+            </div>
+
+            <div className="flex gap-10">
+              <NavbarLink href="/dashboardCoordenacao"><FaChartBar className="inline mr-1"/> Dashboard</NavbarLink>
+              <NavbarLink href="/relatorios"><FaChartBar className="inline mr-1"/> Relatórios</NavbarLink>
+              <NavbarLink href="/matriculas"><FaUsers className="inline mr-1"/> Matriculas</NavbarLink>
+              <NavbarLink href="/alertas"><FaBell className="inline mr-1"/> Alertas</NavbarLink>
+            </div>
+          </div>
+        </>
+      )
+    }
+
+    if (usuario.roles.includes(Roles.RESPONSAVEL)) {
+      return (
+        <>
+          <NavbarLink href="/dashboard"><FaGraduationCap className="inline mr-1"/> Dashboard</NavbarLink>
+          <NavbarLink href="/notas"><FaClipboardList className="inline mr-1"/> Notas</NavbarLink>
+          <NavbarLink href="/presenca"><FaClipboardList className="inline mr-1"/> Presença</NavbarLink>
+          <NavbarLink href="/observacoes"><FaClipboardList className="inline mr-1"/> Observações</NavbarLink>
+          <NavbarLink href="/alertas"><FaBell className="inline mr-1"/> Alertas</NavbarLink>
+        </>
+      )
+    }
+
+    return null;
+  }
+
+
+  if (usuario.token !== '') {
+    navbarComponent = (
+      <>
+        <DropdownPerfil/>
+      </>
+    );
+
+  } else {
+    navbarComponent = (
+      <Link to='/login' className='flex items-center justify-center'>
+        <Button
+          className='bg-rose-600 hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-700 focus:outline-none focus:ring-0 cursor-pointer'>
+          <span className='text-xl '>Entrar</span>
+          <PiSignInDuotone className='p-1 rounded-lg ' size={40}/>
+        </Button>
+      </Link>
+
     )
+  }
+
+  return (
+    <>
+      <Navbar
+        fluid
+        className='bg-gray-800 fixed top-0 py-3 z-40 w-full justify-between'
+      >
+        <NavbarBrand>
+          <Link to='/home' className='text-2xl font-bold uppercase'>
+            <div className='flex items-center justify-center gap-3'>
+              <img src={Logo} alt='Dia A+' className='max-w-30 ml-2 my-3 h-10'/>
+            </div>
+          </Link>
+        </NavbarBrand>
+
+        <div className="flex md:order-2 items-center space-x-4">
+          {navbarComponent}
+
+          <div className="relative flex items-center p-2 rounded-md cursor-pointer hover:bg-gray-700 ">
+            <FaBell className="text-gray-700 text-2xl"/>
+            {notificationsCount > 0 && (
+              <Badge
+                color="failure"
+                size="sm"
+                className="absolute -top-1 -right-2"
+              >
+                {notificationsCount}
+              </Badge>
+            )}
+          </div>
+
+          <DarkThemeToggle className="cursor-pointer hover:bg-gray-700 focus:outline-none focus:ring-0"/>
+          <NavbarToggle className="cursor-pointer focus:outline-none focus:ring-0"/>
+        </div>
+
+        <NavbarCollapse>
+          {renderMenuLinks()}
+        </NavbarCollapse>
+      </Navbar>
+    </>
+  )
 }
 
 export default NavbarElement;
